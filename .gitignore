@@ -1,4 +1,5 @@
 # binaries
+modpack.exe.WebView2/
 /main
 /modpack
 go_build_main_go

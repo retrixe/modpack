@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>ibu's mod installer</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <comment>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+  </comment>
+  <script>
+    window.addEventListener('load', function () {
+      document.getElementById('select-version').addEventListener('change', function (event) {
+        changeVersion(event.target.value)
+      })
+      document.getElementById('install-fabric').addEventListener('change', function (event) {
+        toggleInstallFabric()
+      })
+      document.getElementById('install').addEventListener('click', function () {
+        installMods()
+      })
+      document.getElementById('faq').addEventListener('click', function () {
+        showFaq()
+      })
+    })
+  </script>
+  <style>#error { color: #ff4444; }
+  body { font-family: sans-serif; }</style>
+</head>
+<body style="text-align: center;">
+  <h2>installer for ibu's mods (Fabric only)</h2>
+  <label for='select-version'>Minecraft Version:</label>
+  <select id='select-version' name="Minecraft Version">
+    <option value="1.14.4">1.14.4 (see FAQ)</option>
+    <option value="1.15.2">1.15.2 (see FAQ)</option>
+    <option value="1.16.1" selected>1.16.1</option>
+  </select>
+  <br />
+  <br />
+  <label for="install-fabric">install fabric</label>
+  <input type="checkbox" id="install-fabric" checked />
+  <br />
+  <br />
+  <button id='faq'>FAQ (read me)</button>
+  <button id='install'>install</button>
+  <br />
+  <p style="display: none;" id="message">Done!</p>
+  <p style="display: none;" id="error" />
+  <p style="display: none;" id="progress">Working...</p>
+  <progress style="display: none;" id="progress-display" />
+</body>
+</html>
