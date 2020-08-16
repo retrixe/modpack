@@ -20,11 +20,17 @@ const Faq = `
       })
     })
   </script>
-  <style>.container > * { display: inline-block; }
-  body { font-family: sans-serif; }</style>
+  <style>
+    .header > * {
+      display: inline-block;
+    }
+    body {
+      font-family: sans-serif;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
+  <div class="header">
     <button id='gui'>back</button>  <h3>ibu's mods - FAQ</h3>
   </div>
   <hr />
@@ -42,7 +48,7 @@ const Faq = `
   fps, use H%2BC and enable fps in the MiniHUD mod, then use H to show it.</p>
   <p><strong>1.16.1: Whenever I break a block while looking straight down, the animation doesn't display.</strong> Disable Compact Vertex
   Format or use the included dev build that fixes it (disable lambDynamicLights before doing so).</p>
-  <p><strong>Full list:</strong> ChunkBorders, EasierChests, Fabric APi, VoxelMap, Hwyla, (lambDynamicLights/Logical
+  <p><strong>Full list:</strong> ChunkBorders, EasierChests, Fabric API, VoxelMap, Hwyla, (lambDynamicLights/Logical
   Zoom/Phosphor/Sodium)/OptiFine%2BOptiFabric, LightOverlay, MaLiLib, MiniHUD, MobCountMod, MyBrightness, ShulkerBoxTooltip,
   ToroHealth, Watson, WorldEditCUI</p>
   <p><strong>Who is this for?</strong> Someone who wants most basic mods but not way too many.</p>
@@ -80,10 +86,17 @@ const HTML = `
       })
     })
   </script>
-  <style>#error { color: #ff4444; }
-  body { font-family: sans-serif; }</style>
+  <style>
+    #error {
+      color: #ff4444;
+    }
+    body {
+      text-align: center;
+      font-family: sans-serif;
+    }
+  </style>
 </head>
-<body style="text-align: center;">
+<body>
   <h2>installer for ibu's mods (Fabric only)</h2>
   <label for='select-version'>Minecraft Version:</label>
   <select id='select-version' name="Minecraft Version">
