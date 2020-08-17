@@ -9,10 +9,10 @@ const Faq = `
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>ibu's mod installer</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <comment>
+  <!--
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src='main.js'></script>
-  </comment>
+  -->
   <script>
     window.addEventListener('load', function () {
       document.getElementById('gui').addEventListener('click', function () {
@@ -66,10 +66,10 @@ const HTML = `
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>ibu's mod installer</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <comment>
+  <!--
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src='main.js'></script>
-  </comment>
+  -->
   <script>
     window.addEventListener('load', function () {
       document.getElementById('select-version').addEventListener('change', function (event) {

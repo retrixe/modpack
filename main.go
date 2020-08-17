@@ -41,7 +41,6 @@ func main() {
 	defer w.Destroy()
 	w.SetSize(600, 300, webview.HintNone)
 	w.SetTitle("ibu's mod installer")
-	w.Navigate("data:text/html," + string(HTML))
 	w.Bind("changeVersion", func(name string) {
 		selectedVersionMutex.Lock()
 		defer selectedVersionMutex.Unlock()
@@ -55,6 +54,7 @@ func main() {
 	w.Bind("installMods", initiateInstall)
 	w.Bind("showFaq", func() { w.Navigate("data:text/html," + string(Faq)) })
 	w.Bind("showGui", func() { w.Navigate("data:text/html," + string(HTML)) })
+	w.Navigate("data:text/html," + string(HTML))
 	w.Run()
 }
 
