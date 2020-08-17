@@ -51,7 +51,7 @@ func main() {
 		defer installFabricOptMutex.Unlock()
 		installFabricOpt = !installFabricOpt
 	})
-	w.Bind("installMods", initiateInstall)
+	w.Bind("installMods", func() { go initiateInstall() })
 	w.Bind("showFaq", func() { w.Navigate("data:text/html," + string(Faq)) })
 	w.Bind("showGui", func() { w.Navigate("data:text/html," + string(HTML)) })
 	w.Navigate("data:text/html," + string(HTML))
@@ -66,14 +66,13 @@ func initiateInstall() {
 	hideMessage()
 	hideError()
 	showProgress()
+	disableButtons()
 	home, err := os.UserHomeDir()
 	if err != nil {
-		log.Println(err)
-		setError(err.Error())
-		hideProgress()
+		handleError(err)
 		return
 	}
-	minecraftFolder := filepath.Join(home, ".minecraft") // TODO advanced opts, also gettng newest fabrc
+	minecraftFolder := filepath.Join(home, ".minecraft") // TODO advanced opts
 	if runtime.GOOS == "darwin" {
 		minecraftFolder = filepath.Join(home, "Library", "Application Support", "minecraft")
 	} else if runtime.GOOS == "windows" {
@@ -82,9 +81,7 @@ func initiateInstall() {
 	setProgress("Querying latest mod versions...")
 	modVersion, err := getModVersions(selectedVersion)
 	if err != nil {
-		log.Println(err)
-		setError(err.Error())
-		hideProgress()
+		handleError(err)
 		return
 	}
 	if installFabricOpt {
@@ -93,43 +90,33 @@ func initiateInstall() {
 			setProgress("Querying latest Fabric version...")
 			s, err = getLatestFabric()
 			if err != nil {
-				log.Println(err)
-				setError(err.Error())
-				hideProgress()
+				handleError(err)
 				return
 			}
 		}
 		setProgress("Downloading Fabric...")
 		file, err := downloadFabric(selectedVersion, s)
 		if err != nil {
-			log.Println(err)
-			setError(err.Error())
-			hideProgress()
+			handleError(err)
 			return
 		}
 		setProgress("Installing Fabric...")
 		err = unzipFile(file, filepath.Join(minecraftFolder, "versions"))
 		if err != nil {
-			log.Println(err)
-			setError(err.Error())
-			hideProgress()
+			handleError(err)
 			return
 		}
 	}
 	setProgress("Downloading my mods for " + selectedVersion + "...")
 	file, err := downloadMods(modVersion.URL)
 	if err != nil {
-		log.Println(err)
-		setError(err.Error())
-		hideProgress()
+		handleError(err)
 		return
 	}
 	// Check if there's already a mod folder.
 	_, err = os.Stat(filepath.Join(minecraftFolder, "mods"))
 	if err != nil && !os.IsNotExist(err) {
-		log.Println(err)
-		setError(err.Error())
-		hideProgress()
+		handleError(err)
 		return
 	} else if err == nil {
 		os.Rename(filepath.Join(minecraftFolder, "mods"), filepath.Join(minecraftFolder, "oldmodfolder"))
@@ -137,50 +124,87 @@ func initiateInstall() {
 	}
 	setProgress("Creating mods folder...")
 	if err = os.MkdirAll(filepath.Join(minecraftFolder, "mods"), os.ModePerm); err != nil {
-		log.Println(err)
-		setError(err.Error())
-		hideProgress()
+		handleError(err)
 		return
 	}
 	setProgress("Unzipping my mods...")
 	err = unzipFile(file, filepath.Join(minecraftFolder, "mods"))
 	if err != nil {
-		log.Println(err)
-		setError(err.Error())
-		hideProgress()
+		handleError(err)
 		return
 	}
+	enableButtons()
 	hideProgress()
 	showMessage()
 }
 
+func handleError(err error) {
+		log.Println(err)
+		setError(err.Error())
+		hideProgress()
+	enableButtons()
+	}
+
+func disableButtons() {
+	w.Dispatch(func() {
+		w.Eval(`
+      document.getElementById('faq').setAttribute('disabled', 'disabled')
+      document.getElementById('install-fabric').setAttribute('disabled', 'disabled')
+			document.getElementById('select-version').setAttribute('disabled', 'disabled')
+		`)
+	})
+}
+func enableButtons() {
+	w.Dispatch(func() {
+		w.Eval(`
+      document.getElementById('faq').removeAttribute('disabled')
+      document.getElementById('install-fabric').removeAttribute('disabled')
+			document.getElementById('select-version').removeAttribute('disabled')
+		`)
+	})
+}
+
 func showProgress() {
+	w.Dispatch(func() {
 	w.Eval("document.getElementById('progress').removeAttribute('style'); " +
 		"document.getElementById('progress-display').removeAttribute('style')")
+	})
 }
 func setProgress(content string) {
+	w.Dispatch(func() {
 	w.Eval("document.getElementById('progress').textContent = '" + content + "'") // TODO show %
+	})
 }
 func hideProgress() {
 	setProgress("")
+	w.Dispatch(func() {
 	w.Eval("document.getElementById('progress').setAttribute('style', 'display: none;'); " +
 		"document.getElementById('progress-display').setAttribute('style', 'display: none;')")
+	})
 }
 
 func setError(content string) {
+	w.Dispatch(func() {
 	w.Eval("document.getElementById('error').removeAttribute('style'); " +
 		"document.getElementById('error').textContent = 'Error: " + content + "'")
+	})
 }
 func hideError() {
 	setError("")
+	w.Dispatch(func() {
 	w.Eval("document.getElementById('error').setAttribute('style', 'display: none;');")
+	})
 }
 
 func showMessage() {
+	w.Dispatch(func() {
 	w.Eval("document.getElementById('message').removeAttribute('style')")
+	})
 }
 func hideMessage() {
+	w.Dispatch(func() {
 	w.Eval("document.getElementById('message').setAttribute('style', 'display: none;');")
+	})
 }
 
 func getLatestFabric() (string, error) {

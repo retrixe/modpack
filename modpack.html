@@ -12,10 +12,16 @@
   <script>
     window.addEventListener('load', function () {
       document.getElementById('select-version').addEventListener('change', function (event) {
+        event.preventDefault()
+        event.stopPropagation()
         changeVersion(event.target.value)
+        event.srcElement.value = event.target.value
       })
       document.getElementById('install-fabric').addEventListener('change', function (event) {
+        event.preventDefault()
+        event.stopPropagation()
         toggleInstallFabric()
+        event.srcElement.value = event.target.value
       })
       document.getElementById('install').addEventListener('click', function () {
         installMods()
