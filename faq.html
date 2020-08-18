@@ -4,6 +4,7 @@
   <meta charset='utf-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>ibu's mod installer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <!--
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
@@ -17,17 +18,26 @@
     })
   </script>
   <style>
+    .header { /* Materialize specific styles */
+      display: flex;
+      padding-top: 1em;
+      padding-bottom: 1em;
+      align-items: center;
+    }
     .header > * {
       display: inline-block;
     }
     body {
+      padding: 8px;
       font-family: sans-serif;
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <button id='gui'>back</button>  <h3>ibu's mods - FAQ</h3>
+    <button class="waves-effect waves-light btn-small" id='gui'>back</button>
+    <!-- h3 -->
+    <h5 style="margin: 0 0 0 1rem;">ibu's mods - FAQ</h5>
   </div>
   <hr />
   <p><strong>Fabric or Forge?</strong> Fabric.</p>

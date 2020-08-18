@@ -8,6 +8,7 @@ const Faq = `
   <meta charset='utf-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>ibu's mod installer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <!--
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
@@ -21,17 +22,26 @@ const Faq = `
     })
   </script>
   <style>
+    .header { /* Materialize specific styles */
+      display: flex;
+      padding-top: 1em;
+      padding-bottom: 1em;
+      align-items: center;
+    }
     .header > * {
       display: inline-block;
     }
     body {
+      padding: 8px;
       font-family: sans-serif;
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <button id='gui'>back</button>  <h3>ibu's mods - FAQ</h3>
+    <button class="waves-effect waves-light btn-small" id='gui'>back</button>
+    <!-- h3 -->
+    <h5 style="margin: 0 0 0 1rem;">ibu's mods - FAQ</h5>
   </div>
   <hr />
   <p><strong>Fabric or Forge?</strong> Fabric.</p>
@@ -70,6 +80,7 @@ const HTML = `
   <meta charset='utf-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>ibu's mod installer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <!--
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
@@ -105,29 +116,42 @@ const HTML = `
       text-align: center;
       font-family: sans-serif;
     }
+    /* Materialize specific styles */
+    #progress-display {
+      width: 12em;
+      display: inline-block;
+    }
+    select {
+      width: auto;
+      display: inline-block !important;
+    }
   </style>
 </head>
 <body>
-  <h2>installer for ibu's mods (Fabric only)</h2>
+  <!-- h2 -->
+  <h4>installer for ibu's mods (Fabric only)</h4>
   <label for='select-version'>Minecraft Version:</label>
-  <select id='select-version' name="Minecraft Version">
+  <select id='select-version' name="Minecraft Version" class="browser-default">
     <option value="1.14.4">1.14.4 (see FAQ)</option>
     <option value="1.15.2">1.15.2 (see FAQ)</option>
     <option value="1.16.1" selected>1.16.1</option>
   </select>
   <br />
   <br />
-  <label for="install-fabric">install fabric</label>
-  <input type="checkbox" id="install-fabric" checked />
+  <!-- <label for="install-fabric">install fabric</label> -->
+  <label>
+    <input type="checkbox" class="filled-in" id="install-fabric" checked="checked" />
+    <span>install fabric</span>
+  </label>
   <br />
   <br />
-  <button id='faq'>FAQ (read me)</button>
-  <button id='install'>install</button>
+  <button class="waves-effect waves-light btn-small" id='faq'>FAQ (read me)</button>
+  <button class="waves-effect waves-light btn-small" id='install'>install</button>
   <br />
   <p style="display: none;" id="message">Done!</p>
   <p style="display: none;" id="error" />
   <p style="display: none;" id="progress">Working...</p>
-  <progress style="display: none;" id="progress-display" />
+  <div style="display: none;" id="progress-display" class="progress"><div class="indeterminate" /></div>
 </body>
 </html>
 `

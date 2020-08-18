@@ -139,11 +139,11 @@ func initiateInstall() {
 }
 
 func handleError(err error) {
-		log.Println(err)
-		setError(err.Error())
-		hideProgress()
+	log.Println(err)
+	setError(err.Error())
+	hideProgress()
 	enableButtons()
-	}
+}
 
 func disableButtons() {
 	w.Dispatch(func() {
@@ -166,44 +166,44 @@ func enableButtons() {
 
 func showProgress() {
 	w.Dispatch(func() {
-	w.Eval("document.getElementById('progress').removeAttribute('style'); " +
-		"document.getElementById('progress-display').removeAttribute('style')")
+		w.Eval("document.getElementById('progress').removeAttribute('style'); " +
+			"document.getElementById('progress-display').removeAttribute('style')")
 	})
 }
 func setProgress(content string) {
 	w.Dispatch(func() {
-	w.Eval("document.getElementById('progress').textContent = '" + content + "'") // TODO show %
+		w.Eval("document.getElementById('progress').textContent = '" + content + "'") // TODO show %
 	})
 }
 func hideProgress() {
 	setProgress("")
 	w.Dispatch(func() {
-	w.Eval("document.getElementById('progress').setAttribute('style', 'display: none;'); " +
-		"document.getElementById('progress-display').setAttribute('style', 'display: none;')")
+		w.Eval("document.getElementById('progress').setAttribute('style', 'display: none;'); " +
+			"document.getElementById('progress-display').setAttribute('style', 'display: none;')")
 	})
 }
 
 func setError(content string) {
 	w.Dispatch(func() {
-	w.Eval("document.getElementById('error').removeAttribute('style'); " +
-		"document.getElementById('error').textContent = 'Error: " + content + "'")
+		w.Eval("document.getElementById('error').removeAttribute('style'); " +
+			"document.getElementById('error').textContent = 'Error: " + content + "'")
 	})
 }
 func hideError() {
 	setError("")
 	w.Dispatch(func() {
-	w.Eval("document.getElementById('error').setAttribute('style', 'display: none;');")
+		w.Eval("document.getElementById('error').setAttribute('style', 'display: none;');")
 	})
 }
 
 func showMessage() {
 	w.Dispatch(func() {
-	w.Eval("document.getElementById('message').removeAttribute('style')")
+		w.Eval("document.getElementById('message').removeAttribute('style')")
 	})
 }
 func hideMessage() {
 	w.Dispatch(func() {
-	w.Eval("document.getElementById('message').setAttribute('style', 'display: none;');")
+		w.Eval("document.getElementById('message').setAttribute('style', 'display: none;');")
 	})
 }
 
