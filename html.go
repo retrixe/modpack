@@ -9,6 +9,7 @@ const Faq = `
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>ibu's mod installer</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;700;900&display=swap">
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <!--
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
@@ -33,7 +34,7 @@ const Faq = `
     }
     body {
       padding: 8px;
-      font-family: sans-serif;
+      font-family: Roboto, sans-serif;
     }
   </style>
 </head>
@@ -58,6 +59,7 @@ const Faq = `
   fps, use H%2BC and enable fps in the MiniHUD mod, then use H to show it.</p>
   <p><strong>1.16.1: Whenever I break a block while looking straight down, the animation doesn't display.</strong> Disable Compact Vertex
   Format or use the included dev build that fixes it (disable lambDynamicLights before doing so).</p>
+  <p><strong>Where is VoxelMap data stored?</strong> <code>mods/mamiyaotaru</code> folder.</p>
   <p><strong>Full list:</strong> ChunkBorders, EasierChests, Fabric API, VoxelMap, Hwyla, (lambDynamicLights/Logical
   Zoom/Phosphor/Sodium)/OptiFine%2BOptiFabric, LightOverlay, MaLiLib, MiniHUD, MobCountMod, MyBrightness, ShulkerBoxTooltip,
   ToroHealth, Watson, WorldEditCUI</p>
@@ -84,6 +86,7 @@ const HTML = `
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <title>ibu's mod installer</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;700;900&display=swap">
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <!--
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
@@ -117,7 +120,7 @@ const HTML = `
     }
     body {
       text-align: center;
-      font-family: sans-serif;
+      font-family: Roboto, sans-serif;
     }
     /* Materialize specific styles */
     #progress-display {
