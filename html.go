@@ -61,11 +61,14 @@ const Faq = `
   <p><strong>Full list:</strong> ChunkBorders, EasierChests, Fabric API, VoxelMap, Hwyla, (lambDynamicLights/Logical
   Zoom/Phosphor/Sodium)/OptiFine%2BOptiFabric, LightOverlay, MaLiLib, MiniHUD, MobCountMod, MyBrightness, ShulkerBoxTooltip,
   ToroHealth, Watson, WorldEditCUI</p>
-  <p><strong>What happens to my existing mods?</strong> They will be renamed to <code>oldmodfolder</code>oldmodfolder.
+  <p><strong>What happens to my existing mods?</strong> They will be renamed to <code>oldmodfolder</code>.
   Currently there is a bug that if both <code>mods</code> and <code>oldmodfolder</code> exist, the mods will be duplicated
-  in the <code>mods</code> folder. Hence, make sure your old mods are well clear before installing mods.</p>
-  <p><strong>Can I update my mods when you update yours?</strong> Currently, no. You have to move your old mod folder and
-  backup your VoxelMap data, then restore after new mods are installed.</p>
+  in the <code>mods</code> folder. <strong>Hence, make sure your old mods are well clear before installing these mods!</strong></p>
+  <p><strong>Can I update my mods when you update yours?</strong> Yes! However, ONLY if your mod folder is of the same MC
+  version you selected, will you be able to update! Else, you need to move them out of the way. The version is determined by
+  <code>modsversion.txt</code>. This method allows you to choose what mods you want and remove those you don't want and
+  still be able to update. If you had mods of a different MC version, then they will be handled as in the previous question and
+  hence is best to move them out of the way yourself.</p>
   <p><strong>Who is this for?</strong> Someone who wants most basic mods but not way too many.</p>
   <p><strong>Faster single-player performance.</strong> Lithium mod.</p>
 </body>

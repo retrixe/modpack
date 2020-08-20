@@ -115,20 +115,58 @@ func initiateInstall() {
 	}
 	// Check if there's already a mod folder.
 	_, err = os.Stat(filepath.Join(minecraftFolder, "mods"))
+	modsExist := false // Check if the mod folder contains the same version of mods as our pack.
+	if err == nil {
+		modsExist = getInstalledModsVersion(minecraftFolder) == getMajorMinecraftVersion(selectedVersion)
+	}
 	if err != nil && !os.IsNotExist(err) {
 		handleError(err)
 		return
-	} else if err == nil {
+	} else if err == nil && !modsExist {
 		os.Rename(filepath.Join(minecraftFolder, "mods"), filepath.Join(minecraftFolder, "oldmodfolder"))
 		setProgress("Renamed old mods folder to oldmodfolder!") // todo more explicit
-	}
+	} else if err != nil && os.IsNotExist(err) {
 	setProgress("Creating mods folder...")
 	if err = os.MkdirAll(filepath.Join(minecraftFolder, "mods"), os.ModePerm); err != nil {
 		handleError(err)
 		return
 	}
+	}
 	setProgress("Unzipping my mods...")
+	if modsExist {
+		r, err := zip.NewReader(bytes.NewReader(file), int64(len(file)))
+		if err != nil {
+			handleError(err)
+			return
+		}
+		// Read mods.json.
+		var modsData ModsData
+		for _, f := range r.File {
+			if filepath.Base(f.Name) == "mods.json" {
+				modsJSON, err := f.Open()
+				if err != nil {
+					handleError(err)
+					return
+				}
+				json.NewDecoder(modsJSON).Decode(&modsData)
+				break
+			}
+		}
+		if &modsData != nil {
+			if err = moveOldMods(modsData, minecraftFolder, r); err != nil {
+						handleError(err)
+						return
+					}
+		}
+	} else {
 	err = unzipFile(file, filepath.Join(minecraftFolder, "mods"))
+	if err != nil {
+		handleError(err)
+		return
+	}
+	}
+	err = ioutil.WriteFile( // Write the modsversion.txt.
+		filepath.Join(minecraftFolder, "mods", "modsversion.txt"), []byte(selectedVersion), os.ModePerm)
 	if err != nil {
 		handleError(err)
 		return
@@ -149,6 +187,7 @@ func disableButtons() {
 	w.Dispatch(func() {
 		w.Eval(`
       document.getElementById('faq').setAttribute('disabled', 'disabled')
+			document.getElementById('install').setAttribute('disabled', 'disabled')
       document.getElementById('install-fabric').setAttribute('disabled', 'disabled')
 			document.getElementById('select-version').setAttribute('disabled', 'disabled')
 		`)
@@ -158,6 +197,7 @@ func enableButtons() {
 	w.Dispatch(func() {
 		w.Eval(`
       document.getElementById('faq').removeAttribute('disabled')
+			document.getElementById('install').removeAttribute('disabled')
       document.getElementById('install-fabric').removeAttribute('disabled')
 			document.getElementById('select-version').removeAttribute('disabled')
 		`)
@@ -263,6 +303,60 @@ func downloadMods(url string) ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 
+func getInstalledModsVersion(location string) string {
+	file, err := os.Open(filepath.Join(location, "mods", "modsversion.txt"))
+	defer file.Close()
+	if err != nil {
+		return ""
+	}
+	contents, err := ioutil.ReadAll(file)
+	if err != nil {
+		return ""
+	}
+	return getMajorMinecraftVersion(string(contents))
+}
+
+func getMajorMinecraftVersion(version string) string {
+	lastIndex := strings.LastIndex(version, ".")
+	if lastIndex == -1 || strings.Index(version, ".") == lastIndex {
+		return version
+	}
+	return version[:lastIndex]
+}
+
+func moveOldMods(modsData ModsData, minecraftFolder string, r *zip.Reader) error {
+	location := filepath.Join(minecraftFolder, "mods")
+	err := os.MkdirAll(filepath.Join(location, "oldmods"), os.ModePerm)
+	if err != nil {
+		return err
+	}
+	for key, val := range modsData.OldMods {
+		if _, err := os.Stat(filepath.Join(location, key)); err == nil {
+			err := os.Rename(filepath.Join(location, key), filepath.Join(location, "oldmods", key))
+			if err != nil {
+				return err
+			}
+			mod := modsData.Mods[val]
+			for _, f := range r.File {
+				if filepath.Base(f.Name) == mod {
+					modFile, err := f.Open()
+					if err != nil {
+						return err
+					}
+					fpath := filepath.Join(location, mod)
+					outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+					if err != nil {
+						return err
+					}
+					io.Copy(outFile, modFile)
+					break
+				}
+			}
+		}
+	}
+	return nil
+}
+
 func unzipFile(zipFile []byte, location string) error {
 	// Uses: os, io, strings, filepath, zip, bytes
 	r, err := zip.NewReader(bytes.NewReader(zipFile), int64(len(zipFile)))
@@ -270,6 +364,9 @@ func unzipFile(zipFile []byte, location string) error {
 		return err
 	}
 	for _, f := range r.File {
+		if f.Name == "mods.json" { // Ignore /mods.json during extraction.
+			continue
+		}
 		fpath := filepath.Join(location, f.Name)
 
 		// Check for ZipSlip. More Info: http://bit.ly/2MsjAWE
@@ -333,4 +430,10 @@ type FabricVersionNames struct {
 type ModVersion struct {
 	Fabric string `json:"fabric"`
 	URL    string `json:"url"`
+}
+
+// ModsData ... JSON containing data on mods inside a zip.
+type ModsData struct {
+	Mods    map[string]string `json:"mods"`
+	OldMods map[string]string `json:"oldmods"`
 }
