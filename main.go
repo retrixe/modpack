@@ -19,6 +19,8 @@ import (
 	"github.com/webview/webview"
 )
 
+const modpackVersion = "1.0.0"
+
 var selectedVersion = "1.16.1"
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
@@ -27,6 +29,11 @@ var installFabricOptMutex sync.Mutex
 var w webview.WebView
 
 func main() {
+	if len(os.Args) >= 2 && os.Args[1] == "--version" {
+		println("modpack version " + modpackVersion)
+		return
+	}
+
 	/*
 		html, err := ioutil.ReadFile("modpack.html")
 		if err != nil {
@@ -126,11 +133,11 @@ func initiateInstall() {
 		os.Rename(filepath.Join(minecraftFolder, "mods"), filepath.Join(minecraftFolder, "oldmodfolder"))
 		setProgress("Renamed old mods folder to oldmodfolder!") // todo more explicit
 	} else if err != nil && os.IsNotExist(err) {
-	setProgress("Creating mods folder...")
-	if err = os.MkdirAll(filepath.Join(minecraftFolder, "mods"), os.ModePerm); err != nil {
-		handleError(err)
-		return
-	}
+		setProgress("Creating mods folder...")
+		if err = os.MkdirAll(filepath.Join(minecraftFolder, "mods"), os.ModePerm); err != nil {
+			handleError(err)
+			return
+		}
 	}
 	setProgress("Unzipping my mods...")
 	if modsExist {
@@ -154,16 +161,16 @@ func initiateInstall() {
 		}
 		if &modsData != nil {
 			if err = moveOldMods(modsData, minecraftFolder, r); err != nil {
-						handleError(err)
-						return
-					}
+				handleError(err)
+				return
+			}
 		}
 	} else {
-	err = unzipFile(file, filepath.Join(minecraftFolder, "mods"))
-	if err != nil {
-		handleError(err)
-		return
-	}
+		err = unzipFile(file, filepath.Join(minecraftFolder, "mods"))
+		if err != nil {
+			handleError(err)
+			return
+		}
 	}
 	err = ioutil.WriteFile( // Write the modsversion.txt.
 		filepath.Join(minecraftFolder, "mods", "modsversion.txt"), []byte(selectedVersion), os.ModePerm)
