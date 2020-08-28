@@ -57,11 +57,16 @@ const Faq = `
   wanted, you can also replace Sodium with Canvas for reduced performance but more quality adjustments, future shader
   support and compatibility with Connected Textures mod (Sodium will work with it soon, see its pinned issue). For showing
   fps, use H%2BC and enable fps in the MiniHUD mod, then use H to show it.</p>
-  <p><strong>1.16.1: Whenever I break a block while looking straight down, the animation doesn't display.</strong> Disable Compact Vertex
-  Format or use the included dev build that fixes it (disable lambDynamicLights before doing so).</p>
+  <p><strong>Ok Zoomer has a really weird zoom. How do I get OptiFine style zoom?</strong> I feel you.
+  Mods -> Ok Zoomer -> Settings button -> Set Reset to Preset to Classic -> Apply.</p>
+  <p><strong>Can I still use OptiFine on 1.16.2?</strong> Yes, there are some continuations under development, however they
+  can cause conflicts with other mods (the original reason OptiFabric was discontinued), hence it's recommended to stick to
+  Sodium/Canvas <i>unless you really want shaders, apart from which there's no reason to use OptiFine anymore.</i> They are available
+  at <a>https://github.com/Chocohead/OptiFabric</a> and <a>https://www.curseforge.com/minecraft/mc-mods/optifabric-updated</a>
+  if you really need them.</p>
   <p><strong>Where is VoxelMap data stored?</strong> <code>mods/mamiyaotaru</code> folder.</p>
-  <p><strong>Full list:</strong> ChunkBorders, EasierChests, Fabric API, VoxelMap, Hwyla, (lambDynamicLights/Logical
-  Zoom/Phosphor/Sodium)/OptiFine%2BOptiFabric, LightOverlay, MaLiLib, MiniHUD, MobCountMod, MyBrightness, ShulkerBoxTooltip,
+  <p><strong>Full list:</strong> ChunkBorders, EasierChests, Fabric API, VoxelMap, Hwyla, (lambDynamicLights/Ok
+  Zoomer/Phosphor/Sodium)/OptiFine%2BOptiFabric, LightOverlay, MaLiLib, MiniHUD, MobCountMod, MyBrightness, ShulkerBoxTooltip,
   ToroHealth, Watson, WorldEditCUI</p>
   <p><strong>What happens to my existing mods?</strong> They will be renamed to <code>oldmodfolder</code>.
   Currently there is a bug that if both <code>mods</code> and <code>oldmodfolder</code> exist, the mods will be duplicated
@@ -140,7 +145,7 @@ const HTML = `
   <select id='select-version' name="Minecraft Version" class="browser-default">
     <option value="1.14.4">1.14.4 (see FAQ)</option>
     <option value="1.15.2">1.15.2 (see FAQ)</option>
-    <option value="1.16.1" selected>1.16.1</option>
+    <option value="1.16.2" selected>1.16.2</option>
   </select>
   <br />
   <br />
