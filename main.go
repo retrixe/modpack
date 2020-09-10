@@ -32,6 +32,9 @@ func main() {
 	if len(os.Args) >= 2 && os.Args[1] == "--version" {
 		println("modpack version " + modpackVersion)
 		return
+	} else if len(os.Args) >= 2 && os.Args[1] == "install" {
+		InteractiveCliInstall()
+		return
 	}
 
 	/*

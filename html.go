@@ -49,8 +49,8 @@ const Faq = `
   <p><strong>What Minecraft versions are supported?</strong> Currently, 1.16 is being actively updated while 1.15 is only getting new mods
   (not existing mod updates, these are mostly not very useful either). 1.14 is not being updated at all and the mods are
   out of date and some mods may be missing in the future. You may need to update Fabric API for 1.14/1.15 if using your own Fabric ver.</p>
-  <p><strong>How to use these mods?</strong> You can check the Controls and the mod menu on how to use most of them. For MobCountMod,
-  Watson and MiniHUD, you will need special keybinds (P%2BC, L%2BC and H%2BC respectively).</p>
+  <p><strong>How to use these mods?</strong> You can check the Controls and the mod menu on how to use most of them. For FMap, MobCountMod,
+  Watson and MiniHUD, you will need special keybinds (Y%2BC, P%2BC, L%2BC and H%2BC respectively).</p>
   <p><strong>OptiFine and 1.16?</strong> OptiFine is bundled with the 1.14 and 1.15 zips, while for 1.16, due to OptiFabric/OptiFine being
   problematic/slow respectively, it has been replaced in the zip with Sodium %2B replacements for zoom, show fps and dynamic lights. A full
   list of replacement mods can be found on the OptiFabric GitHub in case you want an OptiFine feature not in my mods. If
@@ -65,9 +65,9 @@ const Faq = `
   want shaders, apart from which there's no reason to use OptiFine anymore.</i> Make sure to disable lambDynamicLights,
   Sodium, Lithium and Phosphor before using OptiFabric 1.16 with my modpack. Please report any incompatibilities to me.</p>
   <p><strong>Where is VoxelMap data stored?</strong> <code>mods/mamiyaotaru</code> folder.</p>
-  <p><strong>Full list:</strong> ChunkBorders, EasierChests, Fabric API, VoxelMap, Hwyla, (lambDynamicLights/Ok
-  Zoomer/Phosphor/Sodium)/OptiFine%2BOptiFabric, LightOverlay, Lithium, MaLiLib, MiniHUD, MobCountMod,
-  MyBrightness, ShulkerBoxTooltip, ToroHealth, Watson, WorldEditCUI</p>
+  <p><strong>Full list:</strong> ChunkBorders, EasierChests, Fabric API, FMapOverlayMod, VoxelMap, Hwyla,
+  (lambDynamicLights/Ok Zoomer/Phosphor/Sodium)/OptiFine%2BOptiFabric, LightOverlay, Lithium, MaLiLib,
+  MiniHUD, MobCountMod, MyBrightness, ShulkerBoxTooltip, ToroHealth, Watson, WorldEditCUI</p>
   <p><strong>What happens to my existing mods?</strong> They will be renamed to <code>oldmodfolder</code>.
   Currently there is a bug that if both <code>mods</code> and <code>oldmodfolder</code> exist, the mods will be duplicated
   in the <code>mods</code> folder. <strong>Hence, make sure your old mods are well clear before installing these mods!</strong></p>
