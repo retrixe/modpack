@@ -77,10 +77,20 @@ func initiateInstall() {
 	hideError()
 	showProgress()
 	disableButtons()
-	home, err := os.UserHomeDir()
+	err := installMods(setProgress)
 	if err != nil {
 		handleError(err)
 		return
+	}
+	enableButtons()
+	hideProgress()
+	showMessage()
+}
+
+func installMods(updateProgress func(string)) error {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
 	}
 	minecraftFolder := filepath.Join(home, ".minecraft") // TODO advanced opts
 	if runtime.GOOS == "darwin" {
@@ -88,40 +98,35 @@ func initiateInstall() {
 	} else if runtime.GOOS == "windows" {
 		minecraftFolder = filepath.Join(home, "AppData", "Roaming", ".minecraft")
 	}
-	setProgress("Querying latest mod versions...")
+	updateProgress("Querying latest mod versions...")
 	modVersion, err := getModVersions(selectedVersion)
 	if err != nil {
-		handleError(err)
-		return
+		return err
 	}
 	if installFabricOpt {
 		s := modVersion.Fabric
 		if s == "latest" {
-			setProgress("Querying latest Fabric version...")
+			updateProgress("Querying latest Fabric version...")
 			s, err = getLatestFabric()
 			if err != nil {
-				handleError(err)
-				return
+				return err
 			}
 		}
-		setProgress("Downloading Fabric...")
+		updateProgress("Downloading Fabric...")
 		file, err := downloadFabric(selectedVersion, s)
 		if err != nil {
-			handleError(err)
-			return
+			return err
 		}
-		setProgress("Installing Fabric...")
+		updateProgress("Installing Fabric...")
 		err = unzipFile(file, filepath.Join(minecraftFolder, "versions"))
 		if err != nil {
-			handleError(err)
-			return
+			return err
 		}
 	}
-	setProgress("Downloading my mods for " + selectedVersion + "...")
+	updateProgress("Downloading my mods for " + selectedVersion + "...")
 	file, err := downloadMods(modVersion.URL)
 	if err != nil {
-		handleError(err)
-		return
+		return err
 	}
 	// Check if there's already a mod folder.
 	_, err = os.Stat(filepath.Join(minecraftFolder, "mods"))
@@ -130,24 +135,21 @@ func initiateInstall() {
 		modsExist = getInstalledModsVersion(minecraftFolder) == getMajorMinecraftVersion(selectedVersion)
 	}
 	if err != nil && !os.IsNotExist(err) {
-		handleError(err)
-		return
+		return err
 	} else if err == nil && !modsExist {
 		os.Rename(filepath.Join(minecraftFolder, "mods"), filepath.Join(minecraftFolder, "oldmodfolder"))
-		setProgress("Renamed old mods folder to oldmodfolder!") // todo more explicit
+		updateProgress("Renamed old mods folder to oldmodfolder!") // todo more explicit
 	} else if err != nil && os.IsNotExist(err) {
-		setProgress("Creating mods folder...")
+		updateProgress("Creating mods folder...")
 		if err = os.MkdirAll(filepath.Join(minecraftFolder, "mods"), os.ModePerm); err != nil {
-			handleError(err)
-			return
+			return err
 		}
 	}
-	setProgress("Unzipping my mods...")
+	updateProgress("Unzipping my mods...")
 	if modsExist {
 		r, err := zip.NewReader(bytes.NewReader(file), int64(len(file)))
 		if err != nil {
-			handleError(err)
-			return
+			return err
 		}
 		// Read mods.json.
 		var modsData ModsData
@@ -155,8 +157,7 @@ func initiateInstall() {
 			if filepath.Base(f.Name) == "mods.json" {
 				modsJSON, err := f.Open()
 				if err != nil {
-					handleError(err)
-					return
+					return err
 				}
 				json.NewDecoder(modsJSON).Decode(&modsData)
 				break
@@ -164,26 +165,21 @@ func initiateInstall() {
 		}
 		if &modsData != nil {
 			if err = moveOldMods(modsData, minecraftFolder, r); err != nil {
-				handleError(err)
-				return
+				return err
 			}
 		}
 	} else {
 		err = unzipFile(file, filepath.Join(minecraftFolder, "mods"))
 		if err != nil {
-			handleError(err)
-			return
+			return err
 		}
 	}
 	err = ioutil.WriteFile( // Write the modsversion.txt.
 		filepath.Join(minecraftFolder, "mods", "modsversion.txt"), []byte(selectedVersion), os.ModePerm)
 	if err != nil {
-		handleError(err)
-		return
+		return err
 	}
-	enableButtons()
-	hideProgress()
-	showMessage()
+	return nil
 }
 
 func handleError(err error) {
