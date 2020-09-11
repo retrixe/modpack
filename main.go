@@ -19,9 +19,9 @@ import (
 	"github.com/webview/webview"
 )
 
-const modpackVersion = "1.0.1"
+const modpackVersion = "1.1.0"
 
-var selectedVersion = "1.16.2"
+var selectedVersion = "1.16.3"
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
 var installFabricOptMutex sync.Mutex

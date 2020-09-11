@@ -59,7 +59,7 @@ const Faq = `
   fps, use H%2BC and enable fps in the MiniHUD mod, then use H to show it.</p>
   <p><strong>Ok Zoomer has a really weird zoom. How do I get OptiFine style zoom?</strong> I feel you.
   Mods -> Ok Zoomer -> Settings button -> Set Reset to Preset to Classic -> Apply.</p>
-  <p><strong>Can I still use OptiFine on 1.16.2?</strong> Yes, you can download it from <a>https://optifine.net</a> and
+  <p><strong>Can I still use OptiFine on 1.16.3?</strong> Yes, you can download it from <a>https://optifine.net</a> and
   <a>https://www.curseforge.com/minecraft/mc-mods/optifabric</a>, however it can cause conflicts with other mods (the
   original reason OptiFabric was discontinued), hence it's recommended to stick to Sodium/Canvas <i>unless you really
   want shaders, apart from which there's no reason to use OptiFine anymore.</i> Make sure to disable lambDynamicLights,
@@ -144,7 +144,7 @@ const HTML = `
   <select id='select-version' name="Minecraft Version" class="browser-default">
     <option value="1.14.4">1.14.4 (see FAQ)</option>
     <option value="1.15.2">1.15.2 (see FAQ)</option>
-    <option value="1.16.2" selected>1.16.2</option>
+    <option value="1.16.3" selected>1.16.3</option>
   </select>
   <br />
   <br />
