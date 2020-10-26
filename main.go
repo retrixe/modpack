@@ -275,7 +275,7 @@ func downloadFabric(version string, fabricVersion string) ([]byte, error) {
 }
 
 func getModVersions(version string) (*ModVersion, error) {
-	url := "https://mythicmc.info/modpack/modpack.json"
+	url := "https://mythicmc.org/modpack/modpack.json"
 	if val, exists := os.LookupEnv("MODS_JSON_URL"); exists {
 		url = val
 	}
