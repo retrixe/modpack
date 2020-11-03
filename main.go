@@ -19,9 +19,9 @@ import (
 	"github.com/webview/webview"
 )
 
-const modpackVersion = "1.1.0"
+const modpackVersion = "1.1.1"
 
-var selectedVersion = "1.16.3"
+var selectedVersion = "1.16.4"
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
 var installFabricOptMutex sync.Mutex
@@ -265,8 +265,8 @@ func getLatestFabric() (string, error) {
 }
 
 func downloadFabric(version string, fabricVersion string) ([]byte, error) {
-	resp, err := http.Get("https://fabricmc.net/download/vanilla?intermediary=" + version +
-		"&loader=" + url.QueryEscape(fabricVersion))
+	resp, err := http.Get("https://meta.fabricmc.net/v2/versions/loader/" + version + "/" +
+		url.QueryEscape(fabricVersion) + "/profile/zip")
 	if err != nil {
 		return nil, err
 	}
