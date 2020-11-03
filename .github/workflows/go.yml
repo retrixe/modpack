@@ -77,6 +77,6 @@ jobs:
         name: modpack-windows
         path: |
           modpack.exe
-          modpack-cli.exe
+          modpack-gui.exe
           webview.dll
           WebView2Loader.dll
