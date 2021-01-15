@@ -20,7 +20,7 @@ func InteractiveCliInstall() {
 	println("")
 
 	// Take inputs.
-	selectedVersion = takeInput("Version of Minecraft to use? [1.14.4/1.15.2/1.16.4]", &Inputs{"1.14.4", "1.15.2", "1.16.4"})
+	selectedVersion = takeInput("Version of Minecraft to use? [1.14.4/1.15.2/1.16.5]", &Inputs{"1.14.4", "1.15.2", "1.16.5"})
 	println("")
 	installFabric := takeInput("Should the modpack install Fabric? [yes/no]", &Inputs{"y", "yes", "n", "no"})
 	if installFabric == "y" || installFabric == "yes" {

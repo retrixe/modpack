@@ -21,7 +21,7 @@ import (
 
 const modpackVersion = "1.1.1"
 
-var selectedVersion = "1.16.4"
+var selectedVersion = "1.16.5"
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
 var installFabricOptMutex sync.Mutex
