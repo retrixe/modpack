@@ -45,6 +45,11 @@ jobs:
 
     - name: Build
       run: go build -ldflags="-s -w" -v .
+      if: ${{ success() && matrix.os != 'windows-latest' }}
+
+    - name: Build Windows CLI binary
+      run: go build -tags windowsclionly -ldflags="-s -w" -v .
+      if: ${{ success() && matrix.os == 'windows-latest' }}
 
     - name: Build Windows GUI binary
       run: go build -ldflags="-s -w -H windowsgui" -o modpack-gui.exe -v .
