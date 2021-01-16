@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -49,7 +50,7 @@ func main() {
 	runGui()
 }
 
-func installMods(updateProgress func(string)) error {
+func installMods(updateProgress func(string), queryUser func(string) bool) error {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return err
@@ -99,6 +100,11 @@ func installMods(updateProgress func(string)) error {
 	if err != nil && !os.IsNotExist(err) {
 		return err
 	} else if err == nil && !modsExist {
+		answer := queryUser(`A mods folder is already present which does not seem to be created by this pack.
+Would you like to rename it to oldmodfolder?`)
+		if !answer {
+			return errors.New("mods folder already exists, and user refused to rename it")
+		}
 		os.Rename(filepath.Join(minecraftFolder, "mods"), filepath.Join(minecraftFolder, "oldmodfolder"))
 		updateProgress("Renamed old mods folder to oldmodfolder!") // todo more explicit
 	} else if err != nil && os.IsNotExist(err) {
@@ -108,6 +114,7 @@ func installMods(updateProgress func(string)) error {
 		}
 	}
 	updateProgress("Unzipping my mods...")
+	modsversionTxt := selectedVersion + "\n"
 	if modsExist {
 		r, err := zip.NewReader(bytes.NewReader(file), int64(len(file)))
 		if err != nil {
@@ -129,6 +136,12 @@ func installMods(updateProgress func(string)) error {
 			if err = moveOldMods(modsData, minecraftFolder, r); err != nil {
 				return err
 			}
+			// Get all the mods that were installed and put them in modsversion.txt
+			mods := make([]string, 0, len(modsData.Mods))
+			for mod := range modsData.Mods {
+				mods = append(mods, mod)
+			}
+			modsversionTxt = selectedVersion + "\n" + strings.Join(mods, ",") + "\n"
 		}
 	} else {
 		err = unzipFile(file, filepath.Join(minecraftFolder, "mods"))
@@ -137,7 +150,7 @@ func installMods(updateProgress func(string)) error {
 		}
 	}
 	err = ioutil.WriteFile( // Write the modsversion.txt.
-		filepath.Join(minecraftFolder, "mods", "modsversion.txt"), []byte(selectedVersion), os.ModePerm)
+		filepath.Join(minecraftFolder, "mods", "modsversion.txt"), []byte(modsversionTxt), os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -210,7 +223,14 @@ func getInstalledModsVersion(location string) string {
 	if err != nil {
 		return ""
 	}
-	return getMajorMinecraftVersion(string(contents))
+	// Extract only the major version for now, comprehensive update system later.
+	stringContents := string(contents)
+	newlineIndex := strings.LastIndex(stringContents, "\n")
+	firstLine := stringContents
+	if newlineIndex != -1 {
+		firstLine = stringContents[:newlineIndex]
+	}
+	return getMajorMinecraftVersion(firstLine)
 }
 
 func getMajorMinecraftVersion(version string) string {

@@ -39,7 +39,13 @@ func InteractiveCliInstall() {
 	}
 
 	// Install the mods.
-	err := installMods(func(s string) { println(s) })
+	err := installMods(func(s string) { println(s) }, func(s string) bool {
+		response := takeInput(s+" [yes/no]", &Inputs{"y", "yes", "n", "no"})
+		if response == "y" || response == "yes" {
+			return true
+		}
+		return false
+	})
 	if err != nil {
 		log.Panicln(err)
 	}

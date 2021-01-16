@@ -39,7 +39,7 @@ func initiateInstall() {
 	hideError()
 	showProgress()
 	disableButtons()
-	err := installMods(setProgress)
+	err := installMods(setProgress, queryUser)
 	if err != nil {
 		handleError(err)
 		return
@@ -54,6 +54,14 @@ func handleError(err error) {
 	setError(err.Error())
 	hideProgress()
 	enableButtons()
+}
+
+func queryUser(query string) bool {
+	// w.Dispatch(func() {
+	// 	w.Eval("modal.open(); document.getElementById('query').textContent = '" + query + "'")
+	// 	// TODO: How do we get back close/open?
+	// })
+	return true
 }
 
 func disableButtons() {
