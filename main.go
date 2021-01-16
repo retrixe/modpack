@@ -19,7 +19,7 @@ import (
 	"github.com/webview/webview"
 )
 
-const modpackVersion = "1.1.1"
+const modpackVersion = "1.2.0"
 
 var selectedVersion = "1.16.5"
 var selectedVersionMutex sync.Mutex
