@@ -65,8 +65,8 @@ const Faq = `
   want shaders, apart from which there's no reason to use OptiFine anymore.</i> Make sure to disable lambDynamicLights,
   Sodium, Lithium and Phosphor before using OptiFabric 1.16 with my modpack. Please report any incompatibilities to me.</p>
   <p><strong>Where is VoxelMap data stored?</strong> <code>mods/mamiyaotaru</code> folder.</p>
-  <p><strong>Full list:</strong> ChunkBorders, Chat Macros, EasierChests, Fabric API, FMapOverlayMod, VoxelMap,
-  Hwyla, (lambDynamicLights/Ok Zoomer/Phosphor/Sodium/Capes) on 1.16, OptiFine%2BOptiFabric on 1.14/1.15,
+  <p><strong>Full list:</strong> ChunkBorders, Chat Macros, Dynamic FPS, EasierChests, Fabric API, FMapOverlayMod,
+  VoxelMap, Hwyla, (Capes/lambDynamicLights/Ok Zoomer/Phosphor/Sodium) on 1.16, OptiFine%2BOptiFabric on 1.14/1.15,
   LightOverlay, Lithium, MaLiLib, MiniHUD, MobCountMod, MyBrightness, ShulkerBoxTooltip, Splash,
   ToroHealth, Watson, WorldEditCUI</p>
   <p><strong>What happens to my existing mods?</strong> They will be renamed to <code>oldmodfolder</code>.
@@ -77,13 +77,14 @@ const Faq = `
   <code>modsversion.txt</code>. This method allows you to choose what mods you want and remove those you don't want and
   still be able to update. If you had mods of a different MC version, then they will be handled as in the previous question and
   hence is best to move them out of the way yourself.</p>
+  <p><strong>Why does Minecraft slow down in the background?</strong> This pack comes with the Dynamic FPS mod which limits
+  Minecraft to 1fps when it's in the background to reduce CPU and GPU usage considerably. You can remove it if you want.</p>
   <p><strong>Who is this for?</strong> Someone who wants most basic mods but not way too many.</p>
   <p><strong>Are there any other mods I should consider?</strong> WorldEdit is useful for single-player terrain editing.
-  The Dynamic FPS mod limits Minecraft to 1fps when it's in the background to conserve your system resources, which can be
-  very helpful. The Command Macros mod allows you to set keybinds to run commands of your choice in-game. You can also use
-  the Rich Presence mod which is available at <a>https://github.com/HotLava03/rich-presence-mod/releases</a> to show
-  Minecraft in your Discord status, however, make sure you follow the rules of any Discord MC servers you are a member
-  of when using this mod. These mods are not included for certain reasons, but they may be of use to you.</p>
+  The Command Macros mod allows you to set keybinds to run commands of your choice in-game. You can also use the Rich
+  Presence mod which is available at <a>https://github.com/HotLava03/rich-presence-mod/releases</a> to show Minecraft
+  in your Discord status, however, make sure you follow the rules of any Discord MC servers you are a member of when
+  using this mod. These mods are not included for certain reasons, but they may be of use to you.</p>
 </body>
 </html>
 `

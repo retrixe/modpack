@@ -81,7 +81,7 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 			return err
 		}
 		updateProgress("Installing Fabric...")
-		err = unzipFile(file, filepath.Join(minecraftFolder, "versions"))
+		_, err = unzipFile(file, filepath.Join(minecraftFolder, "versions"))
 		if err != nil {
 			return err
 		}
@@ -144,9 +144,16 @@ Would you like to rename it to oldmodfolder?`)
 			modsversionTxt = selectedVersion + "\n" + strings.Join(mods, ",") + "\n"
 		}
 	} else {
-		err = unzipFile(file, filepath.Join(minecraftFolder, "mods"))
+		modsData, err := unzipFile(file, filepath.Join(minecraftFolder, "mods"))
 		if err != nil {
 			return err
+		} else if modsData != nil {
+			// Get all the mods that were installed and put them in modsversion.txt
+			mods := make([]string, 0, len(modsData.Mods))
+			for mod := range modsData.Mods {
+				mods = append(mods, mod)
+			}
+			modsversionTxt = selectedVersion + "\n" + strings.Join(mods, ",") + "\n"
 		}
 	}
 	err = ioutil.WriteFile( // Write the modsversion.txt.
@@ -274,14 +281,22 @@ func moveOldMods(modsData ModsData, minecraftFolder string, r *zip.Reader) error
 	return nil
 }
 
-func unzipFile(zipFile []byte, location string) error {
+func unzipFile(zipFile []byte, location string) (*ModsData, error) {
 	// Uses: os, io, strings, filepath, zip, bytes
 	r, err := zip.NewReader(bytes.NewReader(zipFile), int64(len(zipFile)))
 	if err != nil {
-		return err
+		return nil, err
 	}
+	var modsData *ModsData = nil
 	for _, f := range r.File {
 		if f.Name == "mods.json" { // Ignore /mods.json during extraction.
+			modsJSON, err := f.Open()
+			if err != nil {
+				return nil, err
+			}
+			var decode ModsData
+			json.NewDecoder(modsJSON).Decode(&decode)
+			modsData = &decode
 			continue
 		}
 		fpath := filepath.Join(location, f.Name)
@@ -298,27 +313,27 @@ func unzipFile(zipFile []byte, location string) error {
 		// Create parent folder of file if needed.
 		err := os.MkdirAll(filepath.Dir(fpath), os.ModePerm)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		// Open target file.
 		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 		if err != nil {
-			return err
+			return nil, err
 		}
 		// Open file in zip.
 		rc, err := f.Open()
 		if err != nil {
-			return err
+			return nil, err
 		}
 		// Copy file from zip to disk.
 		_, err = io.Copy(outFile, rc)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		outFile.Close()
 		rc.Close()
 	}
-	return nil
+	return modsData, nil
 }
 
 // FabricVersionResponse ... Response from querying Fabric's Maven API.
