@@ -1,6 +1,6 @@
 package main
 
-// Faq ... The HTML for the FAQ page.
+// Faq is the HTML for the FAQ page.
 const Faq = `
 <!DOCTYPE html>
 <html>
@@ -89,7 +89,7 @@ const Faq = `
 </html>
 `
 
-// HTML ... The HTML for the main page.
+// HTML is the HTML for the main page.
 const HTML = `
 <!DOCTYPE html>
 <html>

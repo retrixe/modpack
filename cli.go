@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// InteractiveCliInstall ... Installs mods from the command line.
+// InteractiveCliInstall installs mods from the command line.
 func InteractiveCliInstall() {
 	// Lock Mutexes.
 	selectedVersionMutex.Lock()
@@ -63,10 +63,10 @@ func takeInput(prompt string, inputs *Inputs) string {
 	}
 }
 
-// Inputs ... A type that defines a set of valid inputs.
+// Inputs is a type that defines a set of valid inputs.
 type Inputs []string
 
-// IsValidInput ... Checks if an input in an array matches.
+// IsValidInput checks if an input in an array matches.
 func (inputs *Inputs) IsValidInput(input string) bool {
 	for _, val := range *inputs {
 		if val == input {
@@ -77,10 +77,10 @@ func (inputs *Inputs) IsValidInput(input string) bool {
 }
 
 // Abstraction because yes.
-// GetValidInputs ... Get a list of valid inputs.
+// GetValidInputs gets a list of valid inputs.
 // func (inputs *Inputs) GetValidInputs() []string { return *inputs }
 
-// InputChecker ... An interface that represents inputs of all types.
+// InputChecker is an interface that represents inputs of all types.
 // type InputChecker interface {
 // 	IsValidInput(input string) bool
 // 	GetValidInputs() []string

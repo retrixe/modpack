@@ -336,7 +336,7 @@ func unzipFile(zipFile []byte, location string) (*ModsData, error) {
 	return modsData, nil
 }
 
-// FabricVersionResponse ... Response from querying Fabric's Maven API.
+// FabricVersionResponse is the response from querying Fabric's Maven API.
 type FabricVersionResponse struct {
 	XMLName    xml.Name       `xml:"metadata"`
 	GroupID    string         `xml:"groupId"`
@@ -344,7 +344,7 @@ type FabricVersionResponse struct {
 	Versioning FabricVersions `xml:"versioning"`
 }
 
-// FabricVersions ... Contains latest Fabric version as well as list of Fabric versions.
+// FabricVersions contains the latest Fabric version as well as list of Fabric versions.
 type FabricVersions struct {
 	XMLName  xml.Name             `xml:"versioning"`
 	Latest   string               `xml:"latest"`
@@ -352,19 +352,19 @@ type FabricVersions struct {
 	Versions []FabricVersionNames `xml:"versions"`
 }
 
-// FabricVersionNames ... List of Fabric versions.
+// FabricVersionNames is a list of Fabric versions.
 type FabricVersionNames struct {
 	XMLName xml.Name `xml:"versions"`
 	Version string   `xml:"version"`
 }
 
-// ModVersion ... JSON containing version mappings of mods.
+// ModVersion is a JSON containing version mappings of mods.
 type ModVersion struct {
 	Fabric string `json:"fabric"`
 	URL    string `json:"url"`
 }
 
-// ModsData ... JSON containing data on mods inside a zip.
+// ModsData is a JSON containing data on mods inside a zip.
 type ModsData struct {
 	Mods    map[string]string `json:"mods"`
 	OldMods map[string]string `json:"oldmods"`
