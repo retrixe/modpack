@@ -11,6 +11,10 @@ import (
 var w webview.WebView
 
 func runGui() {
+	// html, err := ioutil.ReadFile("modpack.html")
+	// if err != nil {log.Panicln("Unable to open the GUI HTML!")}
+	// faq, err := ioutil.ReadFile("faq.html")
+	// if err != nil {log.Panicln("Unable to open the GUI HTML!")}
 	w = webview.New(false)
 	defer w.Destroy()
 	w.SetSize(600, 300, webview.HintNone)

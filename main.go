@@ -32,17 +32,6 @@ func main() {
 		InteractiveCliInstall()
 		return
 	}
-
-	/*
-		html, err := ioutil.ReadFile("modpack.html")
-		if err != nil {
-			log.Panicln("Unable to open the GUI HTML!")
-		}
-		faq, err := ioutil.ReadFile("faq.html")
-		if err != nil {
-			log.Panicln("Unable to open the GUI HTML!")
-		}
-	*/
 	runGui()
 }
 
@@ -90,8 +79,10 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 	// Check if there's already a mod folder.
 	_, err = os.Stat(filepath.Join(minecraftFolder, "mods"))
 	modsExist := false // Check if the mod folder contains the same version of mods as our pack.
+	var modsVersionTxt *ModsVersionTxt
 	if err == nil {
-		modsExist = getInstalledModsVersion(minecraftFolder) == getMajorMinecraftVersion(selectedVersion)
+		modsVersionTxt = getInstalledModsVersion(minecraftFolder)
+		modsExist = modsVersionTxt.Version == getMajorMinecraftVersion(selectedVersion)
 	}
 	if err != nil && !os.IsNotExist(err) {
 		return err
@@ -117,19 +108,19 @@ Would you like to rename it to oldmodfolder?`)
 			return err
 		}
 		// Read mods.json.
-		var modsData *ModsData
+		var modsData ModsData
 		for _, f := range r.File {
 			if filepath.Base(f.Name) == "mods.json" {
 				modsJSON, err := f.Open()
 				if err != nil {
 					return err
 				}
-				json.NewDecoder(modsJSON).Decode(modsData)
+				json.NewDecoder(modsJSON).Decode(&modsData)
 				break
 			}
 		}
-		if modsData != nil {
-			if err = moveOldMods(modsData, minecraftFolder, r); err != nil {
+		if modsData.Mods != nil {
+			if err = moveOldMods(modsData, minecraftFolder, r, modsVersionTxt); err != nil {
 				return err
 			}
 			// Get all the mods that were installed and put them in modsversion.txt
@@ -216,24 +207,32 @@ func downloadMods(url string) ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 
-func getInstalledModsVersion(location string) string {
+func getInstalledModsVersion(location string) *ModsVersionTxt {
 	file, err := os.Open(filepath.Join(location, "mods", "modsversion.txt"))
 	if err != nil {
-		return ""
+		return nil
 	}
 	defer file.Close()
 	contents, err := ioutil.ReadAll(file)
 	if err != nil {
-		return ""
+		return nil
 	}
 	// Extract only the major version for now, comprehensive update system later.
 	stringContents := string(contents)
-	newlineIndex := strings.LastIndex(stringContents, "\n")
+	installedMods := make([]string, 0)
+	firstNewlineIndex := strings.Index(stringContents, "\n")
 	firstLine := stringContents
-	if newlineIndex != -1 {
-		firstLine = stringContents[:newlineIndex]
+	if firstNewlineIndex != -1 {
+		firstLine = stringContents[:firstNewlineIndex]
+		nextNewlineIndex := firstNewlineIndex + strings.Index(stringContents[firstNewlineIndex+1:], "\n")
+		if nextNewlineIndex != -1 {
+			installedMods = strings.Split(stringContents[firstNewlineIndex+1:nextNewlineIndex+1], ",")
+		}
 	}
-	return getMajorMinecraftVersion(firstLine)
+	return &ModsVersionTxt{
+		Version:       getMajorMinecraftVersion(firstLine),
+		InstalledMods: installedMods,
+	}
 }
 
 func getMajorMinecraftVersion(version string) string {
@@ -244,7 +243,7 @@ func getMajorMinecraftVersion(version string) string {
 	return version[:lastIndex]
 }
 
-func moveOldMods(modsData *ModsData, minecraftFolder string, r *zip.Reader) error {
+func moveOldMods(modsData ModsData, minecraftFolder string, r *zip.Reader, m *ModsVersionTxt) error {
 	location := filepath.Join(minecraftFolder, "mods")
 	err := os.MkdirAll(filepath.Join(location, "oldmods"), os.ModePerm)
 	if err != nil {
@@ -274,6 +273,37 @@ func moveOldMods(modsData *ModsData, minecraftFolder string, r *zip.Reader) erro
 			}
 		}
 	}
+	// Install mods newly added to the pack.
+	if m != nil && len(m.InstalledMods) > 0 {
+		for mod, filename := range modsData.Mods {
+			// Check if it's in InstalledMods, if it isn't, then install it.
+			installed := false
+			for _, installedMod := range m.InstalledMods {
+				print(installedMod)
+				if installedMod == mod {
+					installed = true
+				}
+			}
+			if !installed { // Then install it.
+				for _, f := range r.File {
+					if filepath.Base(f.Name) == filename {
+						modFile, err := f.Open()
+						if err != nil {
+							return err
+						}
+						fpath := filepath.Join(location, filename)
+						outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+						if err != nil {
+							return err
+						}
+						io.Copy(outFile, modFile)
+						break
+					}
+				}
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -364,4 +394,10 @@ type ModVersion struct {
 type ModsData struct {
 	Mods    map[string]string `json:"mods"`
 	OldMods map[string]string `json:"oldmods"`
+}
+
+// ModsVersionTxt contains the contents of modsversion.txt.
+type ModsVersionTxt struct {
+	Version       string
+	InstalledMods []string
 }
