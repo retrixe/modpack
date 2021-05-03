@@ -117,18 +117,18 @@ Would you like to rename it to oldmodfolder?`)
 			return err
 		}
 		// Read mods.json.
-		var modsData ModsData
+		var modsData *ModsData
 		for _, f := range r.File {
 			if filepath.Base(f.Name) == "mods.json" {
 				modsJSON, err := f.Open()
 				if err != nil {
 					return err
 				}
-				json.NewDecoder(modsJSON).Decode(&modsData)
+				json.NewDecoder(modsJSON).Decode(modsData)
 				break
 			}
 		}
-		if &modsData != nil {
+		if modsData != nil {
 			if err = moveOldMods(modsData, minecraftFolder, r); err != nil {
 				return err
 			}
@@ -218,10 +218,10 @@ func downloadMods(url string) ([]byte, error) {
 
 func getInstalledModsVersion(location string) string {
 	file, err := os.Open(filepath.Join(location, "mods", "modsversion.txt"))
-	defer file.Close()
 	if err != nil {
 		return ""
 	}
+	defer file.Close()
 	contents, err := ioutil.ReadAll(file)
 	if err != nil {
 		return ""
@@ -244,7 +244,7 @@ func getMajorMinecraftVersion(version string) string {
 	return version[:lastIndex]
 }
 
-func moveOldMods(modsData ModsData, minecraftFolder string, r *zip.Reader) error {
+func moveOldMods(modsData *ModsData, minecraftFolder string, r *zip.Reader) error {
 	location := filepath.Join(minecraftFolder, "mods")
 	err := os.MkdirAll(filepath.Join(location, "oldmods"), os.ModePerm)
 	if err != nil {

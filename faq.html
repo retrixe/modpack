@@ -47,32 +47,29 @@
   missing in the future. You may need to update Fabric API for 1.14/1.15 if using your own version of Fabric Loader.</p>
   <p><strong>How to use these mods?</strong> You can check the Controls and the mod menu on how to use most of them. For FMap, MobCountMod,
   Watson and MiniHUD, you will need special keybinds (Y%2BC, P%2BC, L%2BC and H%2BC respectively).</p>
-  <p><strong>OptiFine and 1.16?</strong> OptiFine is bundled with the 1.14 and 1.15 zips, while for 1.16, due to OptiFabric/OptiFine being
-  problematic/slow respectively, it has been replaced in the zip with Sodium %2B replacements for zoom, show fps and dynamic lights. A full
-  list of replacement mods can be found on the OptiFabric GitHub in case you want an OptiFine feature not in my mods. If
-  wanted, you can also replace Sodium with Canvas for reduced performance but more quality adjustments, future shader
-  support and compatibility with Connected Textures mod (Sodium will work with it soon, see its pinned issue). For showing
-  fps, use H%2BC and enable fps in the MiniHUD mod, then use H to show it.</p>
+  <p><strong>OptiFine and 1.16?</strong> OptiFine is bundled with 1.14 and 1.15, while for 1.16, due to OptiFabric/OptiFine being slow and
+  problematic, it has been replaced with Sodium and replacements for capes, zoom, show fps and dynamic lights. A full list of replacement
+  mods can be found at <a>https://gist.github.com/LambdAurora/1f6a4a99af374ce500f250c6b42e8754</a> for resource pack features, better
+  grass, connected textures, etc. If wanted, you can also replace Sodium with Canvas for reduced performance but more quality settings
+  and shader support (not OptiFine shaders though). For showing fps, use H%2BC and enable fps in the MiniHUD mod, then use H to show it.</p>
   <p><strong>Ok Zoomer has a really weird zoom. How do I get OptiFine style zoom?</strong> I feel you.
   Mods -> Ok Zoomer -> Settings button -> Set Reset to Preset to Classic -> Apply.</p>
   <p><strong>Can I still use OptiFine on 1.16.5?</strong> Yes, you can download it from <a>https://optifine.net</a> and
   <a>https://www.curseforge.com/minecraft/mc-mods/optifabric</a>, however it can cause conflicts with other mods (the
   original reason OptiFabric was discontinued), hence it's recommended to stick to Sodium/Canvas <i>unless you really
   want shaders, apart from which there's no reason to use OptiFine anymore.</i> Make sure to disable lambDynamicLights,
-  Sodium, Lithium and Phosphor before using OptiFabric 1.16 with my modpack. Please report any incompatibilities to me.</p>
-  <p><strong>Where is VoxelMap data stored?</strong> <code>mods/mamiyaotaru</code> folder.</p>
+  Sodium, Lithium, Hydrogen and Phosphor before using OptiFine 1.16 with my modpack. Please report any incompatibilities to me.</p>
   <p><strong>Full list for 1.16:</strong> ChunkBorders, Chat Macros, Dynamic FPS, EasierChests, Fabric API, FMapOverlayMod,
-  VoxelMap, Hwyla, (Capes/lambDynamicLights/Ok Zoomer/Phosphor/Sodium) on 1.16, OptiFine%2BOptiFabric on 1.14/1.15,
+  VoxelMap, Hwyla, (Capes/Hydrogen/lambDynamicLights/Ok Zoomer/Phosphor/Sodium) on 1.16, OptiFine%2BOptiFabric on 1.14/1.15,
   LightOverlay, Lithium, M-Tape, MaLiLib, MiniHUD, MobCountMod, MyBrightness, ShulkerBoxTooltip, Splash,
   ToroHealth, Watson, WorldEditCUI</p>
   <p><strong>What happens to my existing mods?</strong> They will be renamed to <code>oldmodfolder</code>.
   Currently there is a bug that if both <code>mods</code> and <code>oldmodfolder</code> exist, the mods will be duplicated
   in the <code>mods</code> folder. <strong>Hence, make sure your old mods are well clear before installing these mods!</strong></p>
-  <p><strong>Can I update my mods when you update yours?</strong> Yes! However, ONLY if your mod folder is of the same MC
-  version you selected, will you be able to update! Else, you need to move them out of the way. The version is determined by
-  <code>modsversion.txt</code>. This method allows you to choose what mods you want and remove those you don't want and
-  still be able to update. If you had mods of a different MC version, then they will be handled as in the previous question and
-  hence is best to move them out of the way yourself.</p>
+  <p><strong>Can I update my mods when you update yours?</strong> Yes! If you use 1.16, just click the Install button! This feature
+  is only supported if you installed mods via this installer. The Minecraft version and new mods to install is determined by
+  <code>modsversion.txt</code>. This file allows you to remove the mods you don't want and still be able to update without
+  getting the mod again. If this file doesn't exist, the installer will rename the <code>mods</code> folder instead of updating.</p>
   <p><strong>Why does Minecraft slow down in the background?</strong> This pack comes with the Dynamic FPS mod which limits
   Minecraft to 1fps when it's in the background to reduce CPU and GPU usage considerably. You can remove it if you want.</p>
   <p><strong>Who is this for?</strong> Someone who wants most basic mods but not way too many.</p>
