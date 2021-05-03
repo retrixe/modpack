@@ -14,10 +14,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-    - name: Set up Go 1.15
+    - name: Set up Go 1.16
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.15
+        go-version: ^1.16
       id: go
 
     - name: Check out code into the Go module directory
@@ -48,7 +48,7 @@ jobs:
       if: ${{ success() && matrix.os != 'windows-latest' }}
 
     - name: Build Windows CLI binary
-      run: go build -tags windowsclionly -ldflags="-s -w" -v .
+      run: go build -tags clionly -ldflags="-s -w" -v .
       if: ${{ success() && matrix.os == 'windows-latest' }}
 
     - name: Build Windows GUI binary

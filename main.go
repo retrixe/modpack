@@ -15,8 +15,6 @@ import (
 	"runtime"
 	"strings"
 	"sync"
-
-	"github.com/webview/webview"
 )
 
 const modpackVersion = "1.2.0"
@@ -25,8 +23,6 @@ var selectedVersion = "1.16.5"
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
 var installFabricOptMutex sync.Mutex
-
-var w webview.WebView
 
 func main() {
 	if len(os.Args) >= 2 && (os.Args[1] == "--version" || os.Args[1] == "-v") {

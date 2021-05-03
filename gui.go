@@ -1,4 +1,4 @@
-// +build !windowsclionly
+// +build !clionly
 
 package main
 
@@ -7,6 +7,8 @@ import (
 
 	"github.com/webview/webview"
 )
+
+var w webview.WebView
 
 func runGui() {
 	w = webview.New(false)
