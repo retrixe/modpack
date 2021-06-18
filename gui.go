@@ -3,6 +3,7 @@
 package main
 
 import (
+	_ "embed"
 	"log"
 
 	"github.com/webview/webview"
@@ -10,11 +11,15 @@ import (
 
 var w webview.WebView
 
+// Faq is the HTML for the FAQ page.
+//go:embed faq.html
+var Faq string
+
+// HTML is the HTML for the main page.
+//go:embed modpack.html
+var HTML string
+
 func runGui() {
-	// html, err := ioutil.ReadFile("modpack.html")
-	// if err != nil {log.Panicln("Unable to open the GUI HTML!")}
-	// faq, err := ioutil.ReadFile("faq.html")
-	// if err != nil {log.Panicln("Unable to open the GUI HTML!")}
 	w = webview.New(false)
 	defer w.Destroy()
 	w.SetSize(600, 300, webview.HintNone)
