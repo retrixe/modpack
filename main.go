@@ -4,12 +4,9 @@ import (
 	"archive/zip"
 	"bytes"
 	"encoding/json"
-	"encoding/xml"
 	"errors"
 	"io"
 	"io/ioutil"
-	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -72,7 +69,7 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 		}
 	}
 	updateProgress("Downloading my mods for " + selectedVersion + "...")
-	file, err := downloadMods(modVersion.URL)
+	file, err := downloadFile(modVersion.URL)
 	if err != nil {
 		return err
 	}
@@ -149,62 +146,6 @@ Would you like to rename it to oldmodfolder?`)
 		return err
 	}
 	return nil
-}
-
-func getLatestFabric() (string, error) {
-	resp, err := http.Get("https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml")
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-	var versions FabricVersionResponse
-	xml.NewDecoder(resp.Body).Decode(&versions)
-	return versions.Versioning.Latest, nil
-}
-
-func downloadFabric(version string, fabricVersion string) ([]byte, error) {
-	resp, err := http.Get("https://meta.fabricmc.net/v2/versions/loader/" + version + "/" +
-		url.QueryEscape(fabricVersion) + "/profile/zip")
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	return ioutil.ReadAll(resp.Body)
-}
-
-func getModVersions(version string) (*ModVersion, error) {
-	url := "https://mythicmc.org/modpack/modpack.json"
-	if val, exists := os.LookupEnv("MODS_JSON_URL"); exists {
-		url = val
-	}
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	var res map[string]ModVersion
-	err = json.NewDecoder(resp.Body).Decode(&res)
-	if err != nil {
-		return nil, err
-	}
-	ver := res[version]
-	return &ver, nil
-}
-
-func downloadMods(url string) ([]byte, error) {
-	/*
-		url := "https://cdn.discordapp.com/attachments/402428932839833601/744123637291941888/1161_mods.zip"
-		if version == "1.14.4" {
-			url = "https://cdn.discordapp.com/attachments/402428932839833601/744123637291941888/1161_mods.zip"
-		} else if version == "1.15.2" {
-			url = "https://cdn.discordapp.com/attachments/402428932839833601/744123637291941888/1161_mods.zip"
-		}
-	*/
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	return ioutil.ReadAll(resp.Body)
 }
 
 func getInstalledModsVersion(location string) *ModsVersionTxt {
@@ -360,44 +301,4 @@ func unzipFile(zipFile []byte, location string) (*ModsData, error) {
 		rc.Close()
 	}
 	return modsData, nil
-}
-
-// FabricVersionResponse is the response from querying Fabric's Maven API.
-type FabricVersionResponse struct {
-	XMLName    xml.Name       `xml:"metadata"`
-	GroupID    string         `xml:"groupId"`
-	ArtifactID string         `xml:"artifactId"`
-	Versioning FabricVersions `xml:"versioning"`
-}
-
-// FabricVersions contains the latest Fabric version as well as list of Fabric versions.
-type FabricVersions struct {
-	XMLName  xml.Name             `xml:"versioning"`
-	Latest   string               `xml:"latest"`
-	Release  string               `xml:"release"`
-	Versions []FabricVersionNames `xml:"versions"`
-}
-
-// FabricVersionNames is a list of Fabric versions.
-type FabricVersionNames struct {
-	XMLName xml.Name `xml:"versions"`
-	Version string   `xml:"version"`
-}
-
-// ModVersion is a JSON containing version mappings of mods.
-type ModVersion struct {
-	Fabric string `json:"fabric"`
-	URL    string `json:"url"`
-}
-
-// ModsData is a JSON containing data on mods inside a zip.
-type ModsData struct {
-	Mods    map[string]string `json:"mods"`
-	OldMods map[string]string `json:"oldmods"`
-}
-
-// ModsVersionTxt contains the contents of modsversion.txt.
-type ModsVersionTxt struct {
-	Version       string
-	InstalledMods []string
 }

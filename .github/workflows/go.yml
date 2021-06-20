@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-18.04, macos-latest, windows-latest]
     steps:
     - name: Set up Go 1.16
       uses: actions/setup-go@v2
@@ -33,7 +33,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends libwebkit2gtk-4.0-dev
-      if: ${{ success() && matrix.os == 'ubuntu-latest' }}
+      if: ${{ success() && matrix.os == 'ubuntu-18.04' }}
 
     - name: Get dependencies
       run: |
@@ -60,7 +60,7 @@ jobs:
     
     - name: Upload a Build Artifact (Linux)
       uses: actions/upload-artifact@v2.1.4
-      if: ${{ success() && matrix.os == 'ubuntu-latest' }}
+      if: ${{ success() && matrix.os == 'ubuntu-18.04' }}
       with:
         # Artifact name
         name: modpack-linux # optional, default is artifact

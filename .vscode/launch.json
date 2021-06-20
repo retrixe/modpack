@@ -12,15 +12,6 @@
       "program": "${workspaceFolder}",
       "env": {},
       "args": []
-    },
-    {
-      "name": "Launch with DAP",
-      "type": "godlvdap",
-      "request": "launch",
-      "mode": "auto",
-      "program": "${workspaceFolder}",
-      "env": {},
-      "args": []
     }
   ]
 }
