@@ -73,33 +73,38 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 	if err != nil {
 		return err
 	}
+
 	// Check if there's already a mod folder.
 	_, err = os.Stat(filepath.Join(minecraftFolder, "mods"))
-	modsExist := false // Check if the mod folder contains the same version of mods as our pack.
 	var modsVersionTxt *ModsVersionTxt
 	if err == nil {
 		modsVersionTxt = getInstalledModsVersion(minecraftFolder)
-		modsExist = modsVersionTxt.Version == getMajorMinecraftVersion(selectedVersion)
 	}
+	incompatModsExist := modsVersionTxt != nil && modsVersionTxt.Version != getMajorMinecraftVersion(selectedVersion)
 	if err != nil && !os.IsNotExist(err) {
 		return err
-	} else if err == nil && !modsExist {
-		answer := queryUser(`A mods folder is already present which does not seem to be created by this pack.
-Would you like to rename it to oldmodfolder?`)
-		if !answer {
-			return errors.New("mods folder already exists, and user refused to rename it")
-		}
-		os.Rename(filepath.Join(minecraftFolder, "mods"), filepath.Join(minecraftFolder, "oldmodfolder"))
-		updateProgress("Renamed old mods folder to oldmodfolder!") // todo more explicit
 	} else if err != nil && os.IsNotExist(err) {
 		updateProgress("Creating mods folder...")
 		if err = os.MkdirAll(filepath.Join(minecraftFolder, "mods"), os.ModePerm); err != nil {
 			return err
 		}
+	} else if err == nil && incompatModsExist {
+		_, err = os.Stat(filepath.Join(minecraftFolder, "oldmods"))
+		if err == nil || !os.IsNotExist(err) {
+			return errors.New("mods folder and oldmods folder exist, user must remove/rename either folder")
+		}
+		answer := queryUser(`A mods folder is already present which does not seem to be created by this pack.
+Would you like to rename it to oldmods?`)
+		if !answer {
+			return errors.New("mods folder already exists, and user refused to rename it")
+		}
+		os.Rename(filepath.Join(minecraftFolder, "mods"), filepath.Join(minecraftFolder, "oldmods"))
 	}
-	updateProgress("Unzipping my mods...")
+
+	// Install/update the mods.
+	updateProgress("Installing mods...")
 	modsversionTxt := selectedVersion + "\n"
-	if modsExist {
+	if !incompatModsExist {
 		r, err := zip.NewReader(bytes.NewReader(file), int64(len(file)))
 		if err != nil {
 			return err
@@ -301,4 +306,16 @@ func unzipFile(zipFile []byte, location string) (*ModsData, error) {
 		rc.Close()
 	}
 	return modsData, nil
+}
+
+// ModsData is a JSON containing data on mods inside a zip.
+type ModsData struct {
+	Mods    map[string]string `json:"mods"`
+	OldMods map[string]string `json:"oldmods"`
+}
+
+// ModsVersionTxt contains the contents of modsversion.txt.
+type ModsVersionTxt struct {
+	Version       string
+	InstalledMods []string
 }

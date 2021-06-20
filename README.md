@@ -10,7 +10,7 @@ Download the latest version for your platform from [here](https://github.com/ret
 
 ## Updates
 
-Whenever mods are updated, an entry is made in  a `mods.json` in the zip file for that version of the mod. Upon installing when mods from this pack are already installed, the installer will match the major Minecraft version selected for install with the version of the mods in the `mods` folder, determined by `modsversion.txt`. If both belong to the same major Minecraft version, the existing mods will be updated instead by looping through `mods.json`, finding old mods, and replacing them. If they do not/the folder does not exist, the folder will be renamed to `oldmodfolder` and a fresh install will occur.
+Whenever mods are updated, an entry is made in  a `mods.json` in the zip file for that version of the mod. Upon installing when mods from this pack are already installed, the installer will match the major Minecraft version selected for install with the version of the mods in the `mods` folder, determined by `modsversion.txt`. If both belong to the same major Minecraft version, the existing mods will be updated instead by looping through `mods.json`, finding old mods, and replacing them. If they do not/the folder does not exist, the folder will be renamed to `oldmods` and a fresh install will occur.
 
 ## Servers and Development
 

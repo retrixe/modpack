@@ -84,15 +84,3 @@ type ModVersion struct {
 	Fabric string `json:"fabric"`
 	URL    string `json:"url"`
 }
-
-// ModsData is a JSON containing data on mods inside a zip.
-type ModsData struct {
-	Mods    map[string]string `json:"mods"`
-	OldMods map[string]string `json:"oldmods"`
-}
-
-// ModsVersionTxt contains the contents of modsversion.txt.
-type ModsVersionTxt struct {
-	Version       string
-	InstalledMods []string
-}

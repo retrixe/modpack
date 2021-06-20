@@ -104,7 +104,7 @@ func showProgress() {
 }
 func setProgress(content string) {
 	w.Dispatch(func() {
-		w.Eval("document.getElementById('progress').textContent = '" + content + "'") // TODO show %
+		w.Eval("document.getElementById('progress').textContent = '" + content + "'")
 	})
 }
 func hideProgress() {
