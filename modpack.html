@@ -31,6 +31,7 @@
       document.getElementById('faq').addEventListener('click', function () {
         showFaq()
       })
+      M.Modal.init(document.querySelectorAll('.modal'), {})
     })
   </script>
   <style>
@@ -50,11 +51,22 @@
       width: auto;
       display: inline-block !important;
     }
+    /*.install-path {
+      margin-left: 12px;
+      margin-right: 12px;
+      margin-bottom: 12px;
+    }*/
   </style>
 </head>
 <body>
-  <!-- h2 -->
-  <h4>installer for ibu's mods (Fabric only)</h4>
+  <div id="modal1" class="modal">
+    <div class="modal-content"><h4>Hey!</h4><p id="query"></p></div>
+    <div class="modal-footer">
+      <a class="modal-close waves-effect waves-teal btn-flat" onclick="respondQuery(false)">No</a>
+      <a class="modal-close waves-effect waves-teal btn-flat teal-text" onclick="respondQuery(true)">Yes</a>
+    </div>
+  </div>
+  <!-- h2 --><h4>installer for ibu's mods (Fabric only)</h4>
   <label for='select-version'>Minecraft Version:</label>
   <select id='select-version' name="Minecraft Version" class="browser-default">
     <option value="1.14.4">1.14.4 (see FAQ)</option>
@@ -73,9 +85,16 @@
   <button class="waves-effect waves-light btn-small" id='faq'>FAQ (read me)</button>
   <button class="waves-effect waves-light btn-small" id='install'>install</button>
   <br />
+  <!--TODO: <div class="install-path file-field input-field">
+    <div class="btn"><span>Select</span></div>
+    <div class="file-path-wrapper">
+      <input class="file-path validate" type="text" placeholder="Advanced: Path to installation folder (default: .minecraft)">
+    </div>
+  </div>-->
   <p style="display: none;" id="message">Done!</p>
   <p style="display: none;" id="error" />
   <p style="display: none;" id="progress">Working...</p>
   <div style="display: none;" id="progress-display" class="progress"><div class="indeterminate" /></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

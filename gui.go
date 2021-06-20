@@ -5,6 +5,8 @@ package main
 import (
 	_ "embed"
 	"log"
+	"os"
+	"sync"
 
 	"github.com/webview/webview"
 )
@@ -19,10 +21,17 @@ var Faq string
 //go:embed modpack.html
 var HTML string
 
+var guiDialogQueryResponse bool
+var guiDialogQueryResponseMutex sync.Mutex
+
 func runGui() {
-	w = webview.New(false)
+	debug := false
+	if val, exists := os.LookupEnv("DEBUG"); exists {
+		debug = val == "true"
+	}
+	w = webview.New(debug)
 	defer w.Destroy()
-	w.SetSize(600, 300, webview.HintNone)
+	w.SetSize(540, 300, webview.HintNone)
 	w.SetTitle("ibu's mod installer")
 	w.Bind("changeVersion", func(name string) {
 		selectedVersionMutex.Lock()
@@ -34,6 +43,10 @@ func runGui() {
 		defer installFabricOptMutex.Unlock()
 		installFabricOpt = !installFabricOpt
 	})
+	w.Bind("respondQuery", func(response bool) {
+		guiDialogQueryResponse = response
+		guiDialogQueryResponseMutex.Unlock()
+	})
 	w.Bind("installMods", func() { go initiateInstall() })
 	w.Bind("showFaq", func() { w.Navigate("data:text/html," + string(Faq)) })
 	w.Bind("showGui", func() { w.Navigate("data:text/html," + string(HTML)) })
@@ -44,8 +57,10 @@ func runGui() {
 func initiateInstall() {
 	selectedVersionMutex.Lock()
 	installFabricOptMutex.Lock()
+	minecraftFolderMutex.Lock()
 	defer selectedVersionMutex.Unlock()
 	defer installFabricOptMutex.Unlock()
+	defer minecraftFolderMutex.Unlock()
 	hideMessage()
 	hideError()
 	showProgress()
@@ -68,11 +83,14 @@ func handleError(err error) {
 }
 
 func queryUser(query string) bool {
-	// w.Dispatch(func() {
-	// 	w.Eval("modal.open(); document.getElementById('query').textContent = '" + query + "'")
-	// 	// TODO: How do we get back close/open?
-	// })
-	return true
+	guiDialogQueryResponseMutex.Lock()
+	w.Dispatch(func() {
+		w.Eval("document.getElementById('query').textContent = `" + query + "`")
+		w.Eval("M.Modal.getInstance(document.getElementById('modal1')).open()")
+	})
+	guiDialogQueryResponseMutex.Lock()
+	defer guiDialogQueryResponseMutex.Unlock()
+	return guiDialogQueryResponse
 }
 
 func disableButtons() {

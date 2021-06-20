@@ -20,6 +20,8 @@ var selectedVersion = "1.16.5"
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
 var installFabricOptMutex sync.Mutex
+var minecraftFolder = "" // TODO advanced opts
+var minecraftFolderMutex sync.Mutex
 
 func main() {
 	if len(os.Args) >= 2 && (os.Args[1] == "--version" || os.Args[1] == "-v") {
@@ -33,15 +35,18 @@ func main() {
 }
 
 func installMods(updateProgress func(string), queryUser func(string) bool) error {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
-	minecraftFolder := filepath.Join(home, ".minecraft") // TODO advanced opts
-	if runtime.GOOS == "darwin" {
-		minecraftFolder = filepath.Join(home, "Library", "Application Support", "minecraft")
-	} else if runtime.GOOS == "windows" {
-		minecraftFolder = filepath.Join(home, "AppData", "Roaming", ".minecraft")
+	if minecraftFolder == "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+		if runtime.GOOS == "darwin" {
+			minecraftFolder = filepath.Join(home, "Library", "Application Support", "minecraft")
+		} else if runtime.GOOS == "windows" {
+			minecraftFolder = filepath.Join(home, "AppData", "Roaming", ".minecraft")
+		} else {
+			minecraftFolder = filepath.Join(home, ".minecraft")
+		}
 	}
 	updateProgress("Querying latest mod versions...")
 	modVersion, err := getModVersions(selectedVersion)
@@ -80,7 +85,8 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 	if err == nil {
 		modsVersionTxt = getInstalledModsVersion(minecraftFolder)
 	}
-	incompatModsExist := modsVersionTxt != nil && modsVersionTxt.Version != getMajorMinecraftVersion(selectedVersion)
+	incompatModsExist := modsVersionTxt == nil || (modsVersionTxt != nil &&
+		modsVersionTxt.Version != getMajorMinecraftVersion(selectedVersion))
 	if err != nil && !os.IsNotExist(err) {
 		return err
 	} else if err != nil && os.IsNotExist(err) {

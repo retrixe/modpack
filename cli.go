@@ -12,8 +12,10 @@ func InteractiveCliInstall() {
 	// Lock Mutexes.
 	selectedVersionMutex.Lock()
 	installFabricOptMutex.Lock()
+	minecraftFolderMutex.Lock()
 	defer selectedVersionMutex.Unlock()
 	defer installFabricOptMutex.Unlock()
+	defer minecraftFolderMutex.Unlock()
 
 	println("ibu's mod installer for Fabric 1.14.4+ - CLI")
 	println("FAQ: Open the GUI, or use https://mythicmc.info/modpack/faq.html")
