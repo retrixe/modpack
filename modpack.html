@@ -7,10 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;700;900&display=swap">
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <!--
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
-  -->
+  <!--<link rel='stylesheet' type='text/css' media='screen' href='main.css'>-->
   <script>
     window.addEventListener('load', function () {
       document.getElementById('select-version').addEventListener('change', function (event) {
@@ -51,17 +48,17 @@
       width: auto;
       display: inline-block !important;
     }
-    /*.install-path {
+    .install-path {
       margin-left: 12px;
       margin-right: 12px;
       margin-bottom: 12px;
-    }*/
+    }
   </style>
 </head>
 <body>
   <div id="modal1" class="modal">
     <div class="modal-content"><h4>Hey!</h4><p id="query"></p></div>
-    <div class="modal-footer">
+    <div class="modal-footer" id="modal1-buttons">
       <a class="modal-close waves-effect waves-teal btn-flat" onclick="respondQuery(false)">No</a>
       <a class="modal-close waves-effect waves-teal btn-flat teal-text" onclick="respondQuery(true)">Yes</a>
     </div>
@@ -85,12 +82,14 @@
   <button class="waves-effect waves-light btn-small" id='faq'>FAQ (read me)</button>
   <button class="waves-effect waves-light btn-small" id='install'>install</button>
   <br />
-  <!--TODO: <div class="install-path file-field input-field">
-    <div class="btn"><span>Select</span></div>
+  <div class="install-path file-field input-field">
+    <div class="btn" onclick="promptForFolder()"><span>Select</span></div>
     <div class="file-path-wrapper">
-      <input class="file-path validate" type="text" placeholder="Advanced: Path to installation folder (default: .minecraft)">
+      <input class="file-path validate" type="text" id="gamedir-input"
+      oninput="updateMinecraftFolder(event.target.value)"
+      placeholder="Advanced: Path to game install folder (default: .minecraft)" />
     </div>
-  </div>-->
+  </div>
   <p style="display: none;" id="message">Done!</p>
   <p style="display: none;" id="error" />
   <p style="display: none;" id="progress">Working...</p>

@@ -31,6 +31,11 @@ func InteractiveCliInstall() {
 		installFabricOpt = false
 	}
 	println("")
+	minecraftFolderYes := takeInput("Do you want to install to custom .minecraft folder? [yes/no]", &Inputs{"y", "yes", "n", "no"})
+	if minecraftFolderYes == "y" || minecraftFolderYes == "yes" {
+		minecraftFolder = takeInput("Enter path to .minecraft folder:", nil)
+	}
+	println("")
 
 	// Confirm.
 	println("Installing mods for " + selectedVersion + " (Install Fabric: " + strconv.FormatBool(installFabricOpt) + ")")
@@ -58,7 +63,7 @@ func takeInput(prompt string, inputs *Inputs) string {
 		print(prompt + " ")
 		var input string
 		fmt.Scanln(&input)
-		if inputs.IsValidInput(input) {
+		if inputs != nil && inputs.IsValidInput(input) {
 			return input
 		}
 		println("Invalid input! Possible values: " + strings.Join(*inputs, ", "))

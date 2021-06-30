@@ -6,8 +6,10 @@ import (
 	_ "embed"
 	"log"
 	"os"
+	"strings"
 	"sync"
 
+	"github.com/sqweek/dialog"
 	"github.com/webview/webview"
 )
 
@@ -31,7 +33,7 @@ func runGui() {
 	}
 	w = webview.New(debug)
 	defer w.Destroy()
-	w.SetSize(540, 300, webview.HintNone)
+	w.SetSize(540, 360, webview.HintNone)
 	w.SetTitle("ibu's mod installer")
 	w.Bind("changeVersion", func(name string) {
 		selectedVersionMutex.Lock()
@@ -46,6 +48,23 @@ func runGui() {
 	w.Bind("respondQuery", func(response bool) {
 		guiDialogQueryResponse = response
 		guiDialogQueryResponseMutex.Unlock()
+	})
+	w.Bind("updateMinecraftFolder", func(folder string) {
+		minecraftFolderMutex.Lock()
+		defer minecraftFolderMutex.Unlock()
+		minecraftFolder = folder
+	})
+	w.Bind("promptForFolder", func() {
+		directory, err := dialog.Directory().Title("Select Minecraft game directory").Browse()
+		if err != nil {
+			setError(err.Error())
+			return
+		}
+		minecraftFolderMutex.Lock()
+		defer minecraftFolderMutex.Unlock()
+		minecraftFolder = directory
+		folder := strings.ReplaceAll(strings.ReplaceAll(directory, "\\", "\\\\"), "\"", "\\\"")
+		w.Eval("document.getElementById('gamedir-input').value = \"" + folder + "\"")
 	})
 	w.Bind("installMods", func() { go initiateInstall() })
 	w.Bind("showFaq", func() { w.Navigate("data:text/html," + string(Faq)) })
@@ -66,7 +85,7 @@ func initiateInstall() {
 	showProgress()
 	disableButtons()
 	err := installMods(setProgress, queryUser)
-	if err != nil {
+	if err != nil && err.Error() != "Cancelled" {
 		handleError(err)
 		return
 	}

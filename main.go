@@ -20,7 +20,7 @@ var selectedVersion = "1.16.5"
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
 var installFabricOptMutex sync.Mutex
-var minecraftFolder = "" // TODO advanced opts
+var minecraftFolder = ""
 var minecraftFolderMutex sync.Mutex
 
 func main() {
