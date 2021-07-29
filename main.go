@@ -16,7 +16,7 @@ import (
 
 const modpackVersion = "1.2.1"
 
-var selectedVersion = "1.16.5"
+var selectedVersion = "1.17.1"
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
 var installFabricOptMutex sync.Mutex
@@ -68,7 +68,7 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 			return err
 		}
 		updateProgress("Installing Fabric...")
-		_, err = unzipFile(file, filepath.Join(minecraftFolder, "versions"))
+		err = unzipFile(file, filepath.Join(minecraftFolder, "versions"), nil, nil)
 		if err != nil {
 			return err
 		}
@@ -80,7 +80,8 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 	}
 
 	// Check if there's already a mod folder.
-	_, err = os.Stat(filepath.Join(minecraftFolder, "mods"))
+	modsFolder := filepath.Join(minecraftFolder, "mods")
+	_, err = os.Stat(modsFolder)
 	var modsVersionTxt *ModsVersionTxt
 	if err == nil {
 		modsVersionTxt = getInstalledModsVersion(minecraftFolder)
@@ -91,7 +92,7 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 		return err
 	} else if err != nil && os.IsNotExist(err) {
 		updateProgress("Creating mods folder...")
-		if err = os.MkdirAll(filepath.Join(minecraftFolder, "mods"), os.ModePerm); err != nil {
+		if err = os.MkdirAll(modsFolder, os.ModePerm); err != nil {
 			return err
 		}
 	} else if err == nil && incompatModsExist {
@@ -104,33 +105,22 @@ Would you like to rename it to oldmods?`)
 		if !answer {
 			return errors.New("mods folder already exists, and user refused to rename it")
 		}
-		os.Rename(filepath.Join(minecraftFolder, "mods"), filepath.Join(minecraftFolder, "oldmods"))
+		os.Rename(modsFolder, filepath.Join(minecraftFolder, "oldmods"))
 	}
 
 	// Install/update the mods.
 	updateProgress("Installing mods...")
 	modsversionTxt := selectedVersion + "\n"
-	if !incompatModsExist {
-		r, err := zip.NewReader(bytes.NewReader(file), int64(len(file)))
+	// TODO: Improve error handling.
+	if incompatModsExist {
+		modsData, err := readModsJsonFromZip(file)
 		if err != nil {
 			return err
 		}
-		// Read mods.json.
-		var modsData ModsData
-		for _, f := range r.File {
-			if filepath.Base(f.Name) == "mods.json" {
-				modsJSON, err := f.Open()
-				if err != nil {
-					return err
-				}
-				json.NewDecoder(modsJSON).Decode(&modsData)
-				break
-			}
-		}
-		if modsData.Mods != nil {
-			if err = moveOldMods(modsData, minecraftFolder, r, modsVersionTxt); err != nil {
-				return err
-			}
+		err = unzipFile(file, modsFolder, []string{"mods.json"}, nil)
+		if err != nil {
+			return err
+		} else if modsData != nil {
 			// Get all the mods that were installed and put them in modsversion.txt
 			mods := make([]string, 0, len(modsData.Mods))
 			for mod := range modsData.Mods {
@@ -139,7 +129,44 @@ Would you like to rename it to oldmods?`)
 			modsversionTxt = selectedVersion + "\n" + strings.Join(mods, ",") + "\n"
 		}
 	} else {
-		modsData, err := unzipFile(file, filepath.Join(minecraftFolder, "mods"))
+		modsData, err := readModsJsonFromZip(file)
+		if err != nil {
+			return err
+		}
+		var modsToInstall []string
+		// Compare modsVersionTxt with mods.json to get a list of new mods.
+		for modName, modFilename := range modsData.Mods {
+			found := false
+			for _, installedMod := range modsVersionTxt.InstalledMods {
+				if installedMod == modName {
+					found = true
+				}
+			}
+			if !found {
+				modsToInstall = append(modsToInstall, modFilename)
+			}
+		}
+		// Discover old mods which need to be moved.
+		err = os.MkdirAll(filepath.Join(modsFolder, "oldmods"), os.ModePerm)
+		if err != nil {
+			return err
+		}
+		for modFilename, modName := range modsData.OldMods {
+			modFilePath := filepath.Join(modsFolder, modFilename)
+			stat, err := os.Stat(modFilePath)
+			found := err == nil && !stat.IsDir()
+			if found {
+				err := os.Rename(modFilePath, filepath.Join(modsFolder, "oldmods", modFilename))
+				if err != nil {
+					return err
+				}
+				if _, modExists := modsData.Mods[modName]; modExists {
+					modsToInstall = append(modsToInstall, modsData.Mods[modName])
+				}
+			}
+		}
+		// Unzip only new mods.
+		err = unzipFile(file, modsFolder, nil, modsToInstall)
 		if err != nil {
 			return err
 		} else if modsData != nil {
@@ -152,7 +179,7 @@ Would you like to rename it to oldmods?`)
 		}
 	}
 	err = ioutil.WriteFile( // Write the modsversion.txt.
-		filepath.Join(minecraftFolder, "mods", "modsversion.txt"), []byte(modsversionTxt), os.ModePerm)
+		filepath.Join(modsFolder, "modsversion.txt"), []byte(modsversionTxt), os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -195,86 +222,50 @@ func getMajorMinecraftVersion(version string) string {
 	return version[:lastIndex]
 }
 
-func moveOldMods(modsData ModsData, minecraftFolder string, r *zip.Reader, m *ModsVersionTxt) error {
-	location := filepath.Join(minecraftFolder, "mods")
-	err := os.MkdirAll(filepath.Join(location, "oldmods"), os.ModePerm)
-	if err != nil {
-		return err
-	}
-	for key, val := range modsData.OldMods {
-		if _, err := os.Stat(filepath.Join(location, key)); err == nil {
-			err := os.Rename(filepath.Join(location, key), filepath.Join(location, "oldmods", key))
-			if err != nil {
-				return err
-			}
-			mod := modsData.Mods[val]
-			for _, f := range r.File {
-				if filepath.Base(f.Name) == mod {
-					modFile, err := f.Open()
-					if err != nil {
-						return err
-					}
-					fpath := filepath.Join(location, mod)
-					outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-					if err != nil {
-						return err
-					}
-					io.Copy(outFile, modFile)
-					break
-				}
-			}
-		}
-	}
-	// Install mods newly added to the pack.
-	if m != nil && len(m.InstalledMods) > 0 {
-		for mod, filename := range modsData.Mods {
-			// Check if it's in InstalledMods, if it isn't, then install it.
-			installed := false
-			for _, installedMod := range m.InstalledMods {
-				print(installedMod)
-				if installedMod == mod {
-					installed = true
-				}
-			}
-			if !installed { // Then install it.
-				for _, f := range r.File {
-					if filepath.Base(f.Name) == filename {
-						modFile, err := f.Open()
-						if err != nil {
-							return err
-						}
-						fpath := filepath.Join(location, filename)
-						outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-						if err != nil {
-							return err
-						}
-						io.Copy(outFile, modFile)
-						break
-					}
-				}
-			}
-		}
-	}
-
-	return nil
-}
-
-func unzipFile(zipFile []byte, location string) (*ModsData, error) {
-	// Uses: os, io, strings, filepath, zip, bytes
+func readModsJsonFromZip(zipFile []byte) (*ModsData, error) {
+	// Uses zip and bytes
 	r, err := zip.NewReader(bytes.NewReader(zipFile), int64(len(zipFile)))
 	if err != nil {
 		return nil, err
 	}
 	var modsData *ModsData = nil
 	for _, f := range r.File {
-		if f.Name == "mods.json" { // Ignore /mods.json during extraction.
+		if f.FileInfo().Name() == "mods.json" {
 			modsJSON, err := f.Open()
 			if err != nil {
 				return nil, err
 			}
 			var decode ModsData
-			json.NewDecoder(modsJSON).Decode(&decode)
+			err = json.NewDecoder(modsJSON).Decode(&decode)
+			if err != nil {
+				return nil, err
+			}
 			modsData = &decode
+			break
+		}
+	}
+	return modsData, nil
+}
+
+func unzipFile(zipFile []byte, location string, exclude []string, include []string) error {
+	// Uses: os, io, strings, filepath, zip, bytes
+	r, err := zip.NewReader(bytes.NewReader(zipFile), int64(len(zipFile)))
+	if err != nil {
+		return err
+	}
+	for _, f := range r.File {
+		toContinue := len(include) > 0
+		for _, excluded := range exclude {
+			if excluded == f.FileInfo().Name() {
+				toContinue = true
+			}
+		}
+		for _, included := range include {
+			if included == f.FileInfo().Name() {
+				toContinue = false
+			}
+		}
+		if toContinue {
 			continue
 		}
 		fpath := filepath.Join(location, f.Name)
@@ -291,27 +282,27 @@ func unzipFile(zipFile []byte, location string) (*ModsData, error) {
 		// Create parent folder of file if needed.
 		err := os.MkdirAll(filepath.Dir(fpath), os.ModePerm)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		// Open target file.
 		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 		if err != nil {
-			return nil, err
+			return err
 		}
 		// Open file in zip.
 		rc, err := f.Open()
 		if err != nil {
-			return nil, err
+			return err
 		}
 		// Copy file from zip to disk.
 		_, err = io.Copy(outFile, rc)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		outFile.Close()
 		rc.Close()
 	}
-	return modsData, nil
+	return nil
 }
 
 // ModsData is a JSON containing data on mods inside a zip.
