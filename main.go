@@ -72,11 +72,6 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 			return err
 		}
 	}
-	updateProgress("Downloading my mods for " + selectedVersion + "...")
-	file, err := downloadFile(modVersion.URL)
-	if err != nil {
-		return err
-	}
 
 	// Check if there's already a mod folder.
 	modsFolder := filepath.Join(minecraftFolder, "mods")
@@ -105,6 +100,12 @@ Would you like to rename it to oldmods?`)
 			return errors.New("mods folder already exists, and user refused to rename it")
 		}
 		os.Rename(modsFolder, filepath.Join(minecraftFolder, "oldmods"))
+	}
+
+	updateProgress("Downloading my mods for " + selectedVersion + "...")
+	file, err := downloadFile(modVersion.URL)
+	if err != nil {
+		return err
 	}
 
 	// Install/update the mods.
@@ -183,6 +184,30 @@ Would you like to rename it to oldmods?`)
 		return err
 	}
 	return nil
+}
+
+// Lock minecraftFolder before calling.
+func areModsUpdatable() bool {
+	folder := minecraftFolder
+	if folder == "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return false
+		}
+		if runtime.GOOS == "darwin" {
+			folder = filepath.Join(home, "Library", "Application Support", "minecraft")
+		} else if runtime.GOOS == "windows" {
+			folder = filepath.Join(home, "AppData", "Roaming", ".minecraft")
+		} else {
+			folder = filepath.Join(home, ".minecraft")
+		}
+	}
+	_, err := os.Stat(filepath.Join(folder, "mods"))
+	var modsVersionTxt *ModsVersionTxt
+	if err == nil {
+		modsVersionTxt = getInstalledModsVersion(folder)
+	}
+	return modsVersionTxt != nil && modsVersionTxt.Version == getMajorMinecraftVersion(selectedVersion)
 }
 
 func getInstalledModsVersion(location string) *ModsVersionTxt {

@@ -37,8 +37,15 @@ func runGui() {
 	w.SetTitle("ibu's mod installer")
 	w.Bind("changeVersion", func(name string) {
 		selectedVersionMutex.Lock()
+		minecraftFolderMutex.Lock()
 		defer selectedVersionMutex.Unlock()
+		defer minecraftFolderMutex.Unlock()
 		selectedVersion = name
+		if areModsUpdatable() {
+			w.Eval("document.getElementById('install').innerHTML = 'Update'")
+		} else {
+			w.Eval("document.getElementById('install').innerHTML = 'Install'")
+		}
 	})
 	w.Bind("toggleInstallFabric", func() {
 		installFabricOptMutex.Lock()
@@ -53,6 +60,11 @@ func runGui() {
 		minecraftFolderMutex.Lock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = folder
+		if areModsUpdatable() {
+			w.Eval("document.getElementById('install').innerHTML = 'Update'")
+		} else {
+			w.Eval("document.getElementById('install').innerHTML = 'Install'")
+		}
 	})
 	w.Bind("promptForFolder", func() {
 		directory, err := dialog.Directory().Title("Select Minecraft game directory").Browse()
@@ -63,6 +75,11 @@ func runGui() {
 		minecraftFolderMutex.Lock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = directory
+		if areModsUpdatable() {
+			w.Eval("document.getElementById('install').innerHTML = 'Update'")
+		} else {
+			w.Eval("document.getElementById('install').innerHTML = 'Install'")
+		}
 		folder := strings.ReplaceAll(strings.ReplaceAll(directory, "\\", "\\\\"), "\"", "\\\"")
 		w.Eval("document.getElementById('gamedir-input').value = \"" + folder + "\"")
 	})
