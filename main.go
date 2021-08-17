@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -111,7 +110,7 @@ Would you like to rename it to oldmods?`)
 	// Install/update the mods.
 	updateProgress("Installing mods...")
 	modsversionTxt := selectedVersion + "\n"
-	// TODO: Improve error handling.
+	// TODO: Improve error handling by reverting changes made?
 	if incompatModsExist {
 		modsData, err := readModsJsonFromZip(file)
 		if err != nil {
@@ -178,7 +177,7 @@ Would you like to rename it to oldmods?`)
 			modsversionTxt = selectedVersion + "\n" + strings.Join(mods, ",") + "\n"
 		}
 	}
-	err = ioutil.WriteFile( // Write the modsversion.txt.
+	err = os.WriteFile( // Write the modsversion.txt.
 		filepath.Join(modsFolder, "modsversion.txt"), []byte(modsversionTxt), os.ModePerm)
 	if err != nil {
 		return err
@@ -192,7 +191,7 @@ func getInstalledModsVersion(location string) *ModsVersionTxt {
 		return nil
 	}
 	defer file.Close()
-	contents, err := ioutil.ReadAll(file)
+	contents, err := io.ReadAll(file)
 	if err != nil {
 		return nil
 	}

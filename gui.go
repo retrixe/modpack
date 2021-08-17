@@ -68,8 +68,8 @@ func runGui() {
 	})
 	w.Bind("installMods", func() { go initiateInstall() })
 	w.Bind("showFaq", func() { w.Navigate("data:text/html," + string(Faq)) })
-	w.Bind("showGui", func() { w.Navigate("data:text/html," + string(HTML)) })
-	w.Navigate("data:text/html," + string(HTML))
+	w.Bind("showGui", func() { w.Navigate("data:text/html," + strings.ReplaceAll(string(HTML), "+", "%2B")) })
+	w.Navigate("data:text/html," + strings.ReplaceAll(string(HTML), "+", "%2B"))
 	w.Run()
 }
 
