@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-const modpackVersion = "1.2.1"
+const modpackVersion = "1.3.0"
 
 var selectedVersion = "1.17.1"
 var selectedVersionMutex sync.Mutex
