@@ -43,13 +43,14 @@ func InteractiveCliInstall() {
 				})
 				if err != nil {
 					log.Println(err)
-					print("An error occurred. Click Enter to close.")
+					print("An error occurred. Press Enter on keyboard to close.")
 					inputHalt()
 					os.Exit(1)
 				} else {
-					print("Installation succeeded. Click Enter to close.")
+					print("Installation succeeded. Press Enter on keyboard to close.")
+					inputHalt()
+					return
 				}
-				inputHalt()
 			} else {
 				println("Alright, sending you to the installation prompt instead of updating your mods.")
 			}
@@ -96,11 +97,11 @@ func InteractiveCliInstall() {
 	})
 	if err != nil {
 		log.Println(err)
-		print("An error occurred. Click Enter to close.")
+		print("An error occurred. Press Enter on keyboard to close.")
 		inputHalt()
 		os.Exit(1)
 	}
-	print("Installation succeeded. Click Enter to close.")
+	print("Installation succeeded. Press Enter on keyboard to close.")
 	inputHalt()
 }
 

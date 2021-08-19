@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-const modpackVersion = "1.3.0"
+const modpackVersion = "1.3.1"
 const defaultVersion = "1.17"
 
 var selectedVersion = defaultVersion
