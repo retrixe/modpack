@@ -26,14 +26,14 @@ func InteractiveCliInstall() {
 	updatable := areModsUpdatable()
 	if updatable != "" {
 		update := takeInput(
-			"It looks like you already have "+updatable+
-				" version installed. Would you like to update your mods for "+updatable+
-				" to the latest version? [yes/no]",
+			"It looks like you already have "+updatable+" version installed. "+
+				"Would you like to update your mods for "+updatable+" to the latest version? [yes/no]",
 			&Inputs{"y", "yes", "n", "no"},
 		)
 		if update == "y" || update == "yes" {
 			confirm := takeInput("Confirm? [yes/no]", &Inputs{"y", "yes", "n", "no"})
 			if confirm == "y" || confirm == "yes" {
+				selectedVersion = updatable
 				err := installMods(func(s string) { println(s) }, func(s string) bool {
 					response := takeInput(s+" [yes/no]", &Inputs{"y", "yes", "n", "no"})
 					if response == "y" || response == "yes" {
