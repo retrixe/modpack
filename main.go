@@ -134,7 +134,7 @@ Would you like to rename it to oldmods?`)
 		if err != nil {
 			return err
 		}
-		var modsToInstall []string
+		var modsToInstall []string = []string{}
 		// Compare modsVersionTxt with mods.json to get a list of new mods.
 		for modName, modFilename := range modsData.Mods {
 			found := false
@@ -282,14 +282,18 @@ func unzipFile(zipFile []byte, location string, exclude []string, include []stri
 	if err != nil {
 		return err
 	}
+	includePresent := include != nil
+	if includePresent && len(include) == 0 { // Don't bother extracting if no file is included.
+		return nil
+	}
 	for _, f := range r.File {
-		toContinue := len(include) > 0
-		for _, excluded := range exclude {
+		toContinue := includePresent       // If include is present, then continue by default.
+		for _, excluded := range exclude { // If file is in exclude, then continue.
 			if excluded == f.FileInfo().Name() {
 				toContinue = true
 			}
 		}
-		for _, included := range include {
+		for _, included := range include { // If file is in include, then do not continue.
 			if included == f.FileInfo().Name() {
 				toContinue = false
 			}

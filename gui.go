@@ -62,16 +62,7 @@ func runGui() {
 		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = directory
-		updatable := areModsUpdatable()
-		if updatable != "" {
-			selectedVersion = updatable
-			w.Eval("document.getElementById('select-version').value = '" + selectedVersion + "'")
-			w.Eval("document.getElementById('install').innerHTML = 'Update'")
-		} else {
-			selectedVersion = defaultVersion
-			w.Eval("document.getElementById('select-version').value = '" + defaultVersion + "'")
-			w.Eval("document.getElementById('install').innerHTML = 'Install'")
-		}
+		checkUpdatableAndUpdateVersion()
 	})
 	w.Bind("promptForFolder", func() {
 		directory, err := dialog.Directory().Title("Select Minecraft game directory").Browse()
@@ -84,18 +75,7 @@ func runGui() {
 		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = directory
-		updatable := areModsUpdatable()
-		if updatable != "" {
-			selectedVersion = updatable
-			println(selectedVersion)
-			w.Eval("document.getElementById('select-version').value = '" + selectedVersion + "'")
-			w.Eval("document.getElementById('install').innerHTML = 'Update'")
-		} else {
-			selectedVersion = defaultVersion
-			println(selectedVersion)
-			w.Eval("document.getElementById('select-version').value = '" + defaultVersion + "'")
-			w.Eval("document.getElementById('install').innerHTML = 'Install'")
-		}
+		checkUpdatableAndUpdateVersion()
 		folder := strings.ReplaceAll(strings.ReplaceAll(directory, "\\", "\\\\"), "\"", "\\\"")
 		w.Eval("document.getElementById('gamedir-input').value = \"" + folder + "\"")
 	})
@@ -113,6 +93,7 @@ func initiateInstall() {
 	defer selectedVersionMutex.Unlock()
 	defer installFabricOptMutex.Unlock()
 	defer minecraftFolderMutex.Unlock()
+	defer w.Dispatch(checkUpdatableAndUpdateVersion)
 	hideMessage()
 	hideError()
 	showProgress()
@@ -143,6 +124,19 @@ func queryUser(query string) bool {
 	guiDialogQueryResponseMutex.Lock()
 	defer guiDialogQueryResponseMutex.Unlock()
 	return guiDialogQueryResponse
+}
+
+func checkUpdatableAndUpdateVersion() {
+	updatable := areModsUpdatable()
+	if updatable != "" {
+		selectedVersion = updatable
+		w.Eval("document.getElementById('select-version').value = '" + selectedVersion + "'")
+		w.Eval("document.getElementById('install').innerHTML = 'Update'")
+	} else {
+		selectedVersion = defaultVersion
+		w.Eval("document.getElementById('select-version').value = '" + defaultVersion + "'")
+		w.Eval("document.getElementById('install').innerHTML = 'Install'")
+	}
 }
 
 func disableButtons() {
