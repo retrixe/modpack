@@ -34,7 +34,7 @@ func main() {
 }
 
 func installMods(updateProgress func(string), queryUser func(string) bool) error {
-	if minecraftFolder == "" {
+	if minecraftFolder == "" || minecraftFolder == ".minecraft" {
 		home, err := os.UserHomeDir()
 		if err != nil {
 			return err
@@ -189,7 +189,7 @@ Would you like to rename it to oldmods?`)
 // Lock minecraftFolder before calling.
 func areModsUpdatable() string {
 	folder := minecraftFolder
-	if folder == "" {
+	if folder == "" || folder == ".minecraft" {
 		home, err := os.UserHomeDir()
 		if err != nil {
 			return ""

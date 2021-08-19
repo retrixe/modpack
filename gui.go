@@ -56,10 +56,12 @@ func runGui() {
 		guiDialogQueryResponse = response
 		guiDialogQueryResponseMutex.Unlock()
 	})
-	w.Bind("updateMinecraftFolder", func(folder string) {
+	w.Bind("updateMinecraftFolder", func(directory string) {
+		selectedVersionMutex.Lock()
 		minecraftFolderMutex.Lock()
+		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
-		minecraftFolder = folder
+		minecraftFolder = directory
 		if areModsUpdatable() == getMajorMinecraftVersion(selectedVersion) {
 			w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		} else {
@@ -72,7 +74,9 @@ func runGui() {
 			setError(err.Error())
 			return
 		}
+		selectedVersionMutex.Lock()
 		minecraftFolderMutex.Lock()
+		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = directory
 		if areModsUpdatable() == getMajorMinecraftVersion(selectedVersion) {

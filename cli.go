@@ -113,6 +113,8 @@ func takeInput(prompt string, inputs *Inputs) string {
 		fmt.Scanln(&input)
 		if inputs != nil && inputs.IsValidInput(input) {
 			return input
+		} else if inputs == nil {
+			return input
 		}
 		println("Invalid input! Possible values: " + strings.Join(*inputs, ", "))
 	}
