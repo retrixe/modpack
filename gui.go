@@ -41,7 +41,7 @@ func runGui() {
 		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		selectedVersion = name
-		if areModsUpdatable() {
+		if areModsUpdatable() == getMajorMinecraftVersion(selectedVersion) {
 			w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		} else {
 			w.Eval("document.getElementById('install').innerHTML = 'Install'")
@@ -60,7 +60,7 @@ func runGui() {
 		minecraftFolderMutex.Lock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = folder
-		if areModsUpdatable() {
+		if areModsUpdatable() == getMajorMinecraftVersion(selectedVersion) {
 			w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		} else {
 			w.Eval("document.getElementById('install').innerHTML = 'Install'")
@@ -75,7 +75,7 @@ func runGui() {
 		minecraftFolderMutex.Lock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = directory
-		if areModsUpdatable() {
+		if areModsUpdatable() == getMajorMinecraftVersion(selectedVersion) {
 			w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		} else {
 			w.Eval("document.getElementById('install').innerHTML = 'Install'")

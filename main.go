@@ -187,12 +187,12 @@ Would you like to rename it to oldmods?`)
 }
 
 // Lock minecraftFolder before calling.
-func areModsUpdatable() bool {
+func areModsUpdatable() string {
 	folder := minecraftFolder
 	if folder == "" {
 		home, err := os.UserHomeDir()
 		if err != nil {
-			return false
+			return ""
 		}
 		if runtime.GOOS == "darwin" {
 			folder = filepath.Join(home, "Library", "Application Support", "minecraft")
@@ -207,7 +207,11 @@ func areModsUpdatable() bool {
 	if err == nil {
 		modsVersionTxt = getInstalledModsVersion(folder)
 	}
-	return modsVersionTxt != nil && modsVersionTxt.Version == getMajorMinecraftVersion(selectedVersion)
+	if modsVersionTxt != nil {
+		return modsVersionTxt.Version
+	} else {
+		return ""
+	}
 }
 
 func getInstalledModsVersion(location string) *ModsVersionTxt {

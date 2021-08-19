@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -18,8 +19,44 @@ func InteractiveCliInstall() {
 	defer minecraftFolderMutex.Unlock()
 
 	println("ibu's mod installer for Fabric 1.14.4+ - CLI")
-	println("FAQ: Open the GUI, or use https://mythicmc.info/modpack/faq.html")
+	println("FAQ: Open the GUI, or use https://mythicmc.org/modpack/faq.html")
 	println("")
+
+	// Detect if update is possible.
+	updatable := areModsUpdatable()
+	if updatable != "" {
+		update := takeInput(
+			"It looks like you already have "+updatable+
+				" version installed. Would you like to update your mods for "+updatable+
+				" to the latest version? [yes/no]",
+			&Inputs{"y", "yes", "n", "no"},
+		)
+		if update == "y" || update == "yes" {
+			confirm := takeInput("Confirm? [yes/no]", &Inputs{"y", "yes", "n", "no"})
+			if confirm == "y" || confirm == "yes" {
+				err := installMods(func(s string) { println(s) }, func(s string) bool {
+					response := takeInput(s+" [yes/no]", &Inputs{"y", "yes", "n", "no"})
+					if response == "y" || response == "yes" {
+						return true
+					}
+					return false
+				})
+				if err != nil {
+					log.Println(err)
+					print("An error occurred. Click Enter to close.")
+					inputHalt()
+					os.Exit(1)
+				} else {
+					print("Installation succeeded. Click Enter to close.")
+				}
+				inputHalt()
+			} else {
+				println("Alright, sending you to the installation prompt instead of updating your mods.")
+			}
+		} else {
+			println("Alright, sending you to the installation prompt instead of updating your mods.")
+		}
+	}
 
 	// Take inputs.
 	selectedVersion = takeInput("Version of Minecraft to use? [1.14.4/1.15.2/1.16.5/1.17.1]", &Inputs{"1.14.4", "1.15.2", "1.16.5", "1.17.1"})
@@ -41,8 +78,9 @@ func InteractiveCliInstall() {
 	println("Installing mods for " + selectedVersion + " (Install Fabric: " + strconv.FormatBool(installFabricOpt) + ")")
 	confirm := takeInput("Confirm? [yes/no]", &Inputs{"y", "yes", "n", "no"})
 	if confirm == "n" || confirm == "no" {
-		println("Installation cancelled! Exiting...")
-		return
+		print("Installation cancelled! Exiting...")
+		inputHalt()
+		os.Exit(1)
 	}
 
 	// Install the mods.
@@ -54,8 +92,18 @@ func InteractiveCliInstall() {
 		return false
 	})
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
+		print("An error occurred. Click Enter to close.")
+		inputHalt()
+		os.Exit(1)
 	}
+	print("Installation succeeded. Click Enter to close.")
+	inputHalt()
+}
+
+func inputHalt() {
+	var input string
+	fmt.Scanln(&input)
 }
 
 func takeInput(prompt string, inputs *Inputs) string {
