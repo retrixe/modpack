@@ -41,7 +41,7 @@ func runGui() {
 		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		selectedVersion = name
-		if areModsUpdatable() == getMajorMinecraftVersion(selectedVersion) {
+		if areModsUpdatable() == selectedVersion {
 			w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		} else {
 			w.Eval("document.getElementById('install').innerHTML = 'Install'")
@@ -62,9 +62,14 @@ func runGui() {
 		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = directory
-		if areModsUpdatable() == getMajorMinecraftVersion(selectedVersion) {
+		updatable := areModsUpdatable()
+		if updatable != "" {
+			selectedVersion = updatable
+			w.Eval("document.getElementById('select-version').value = '" + selectedVersion + "'")
 			w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		} else {
+			selectedVersion = defaultVersion
+			w.Eval("document.getElementById('select-version').value = '" + defaultVersion + "'")
 			w.Eval("document.getElementById('install').innerHTML = 'Install'")
 		}
 	})
@@ -79,9 +84,16 @@ func runGui() {
 		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		minecraftFolder = directory
-		if areModsUpdatable() == getMajorMinecraftVersion(selectedVersion) {
+		updatable := areModsUpdatable()
+		if updatable != "" {
+			selectedVersion = updatable
+			println(selectedVersion)
+			w.Eval("document.getElementById('select-version').value = '" + selectedVersion + "'")
 			w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		} else {
+			selectedVersion = defaultVersion
+			println(selectedVersion)
+			w.Eval("document.getElementById('select-version').value = '" + defaultVersion + "'")
 			w.Eval("document.getElementById('install').innerHTML = 'Install'")
 		}
 		folder := strings.ReplaceAll(strings.ReplaceAll(directory, "\\", "\\\\"), "\"", "\\\"")

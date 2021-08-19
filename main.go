@@ -14,7 +14,7 @@ import (
 )
 
 const modpackVersion = "1.3.0"
-const defaultVersion = "1.17.1"
+const defaultVersion = "1.17"
 
 var selectedVersion = defaultVersion
 var selectedVersionMutex sync.Mutex
@@ -49,7 +49,7 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 		}
 	}
 	updateProgress("Querying latest mod versions...")
-	modVersion, err := getModVersions(getMajorMinecraftVersion(selectedVersion))
+	modVersion, err := getModVersions(selectedVersion)
 	if err != nil {
 		return err
 	}
