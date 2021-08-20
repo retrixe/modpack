@@ -81,6 +81,7 @@ type FabricVersionNames struct {
 
 // ModVersion is a JSON containing version mappings of mods.
 type ModVersion struct {
-	Fabric string `json:"fabric"`
-	URL    string `json:"url"`
+	FullVersion string `json:"fullVersion"`
+	Fabric      string `json:"fabric"`
+	URL         string `json:"url"`
 }

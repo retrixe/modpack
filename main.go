@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-const modpackVersion = "1.3.1"
+const modpackVersion = "1.3.2"
 const defaultVersion = "1.17"
 
 var selectedVersion = defaultVersion
@@ -63,7 +63,11 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 			}
 		}
 		updateProgress("Downloading Fabric...")
-		file, err := downloadFabric(selectedVersion, s)
+		version := modVersion.FullVersion
+		if version == "" {
+			version = selectedVersion
+		}
+		file, err := downloadFabric(version, s)
 		if err != nil {
 			return err
 		}
