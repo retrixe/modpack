@@ -48,15 +48,19 @@ jobs:
       if: ${{ success() && matrix.os != 'windows-latest' }}
 
     - name: Build Windows CLI binary
-      run: go build -tags clionly -ldflags="-s -w" -v .
+      run: go build -tags clionly -ldflags="-s -w" -o modpack-cli.exe -v .
       if: ${{ success() && matrix.os == 'windows-latest' }}
 
     - name: Build Windows GUI binary
-      run: go build -ldflags="-s -w -H windowsgui" -o modpack-gui.exe -v .
+      run: go build -ldflags="-s -w -H windowsgui" -v .
       if: ${{ success() && matrix.os == 'windows-latest' }}
 
-    # - name: Test
-    #   run: go test -v .
+    - name: Build Windows GUI launcher
+      run: go build -tags launcher -ldflags="-s -w -H windowsgui" -o launcher.exe -v launcher.go
+      if: ${{ success() && matrix.os == 'windows-latest' }}
+
+    - name: Test
+      run: go test -v .
     
     - name: Upload a Build Artifact (Linux)
       uses: actions/upload-artifact@v2.1.4

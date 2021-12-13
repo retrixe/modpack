@@ -1,4 +1,4 @@
-// +build !clionly
+//go:build !clionly
 
 package main
 
