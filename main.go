@@ -16,7 +16,7 @@ import (
 )
 
 const modpackVersion = "1.3.2"
-const defaultVersion = "1.17"
+const defaultVersion = "1.18"
 
 var selectedVersion = defaultVersion
 var selectedVersionMutex sync.Mutex
