@@ -15,7 +15,7 @@ import (
 	"sync"
 )
 
-const modpackVersion = "1.3.2"
+const modpackVersion = "1.4.0"
 const defaultVersion = "1.18"
 
 var selectedVersion = defaultVersion
