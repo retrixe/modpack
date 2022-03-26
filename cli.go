@@ -61,8 +61,8 @@ func InteractiveCliInstall() {
 
 	// Take inputs.
 	selectedVersion = getMajorMinecraftVersion(takeInput(
-		"Version of Minecraft to use? [1.14.4/1.15.2/1.16.5/1.17.1/1.18.1]",
-		&Inputs{"1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.1", "1.14", "1.15", "1.16", "1.17", "1.18"},
+		"Version of Minecraft to use? [1.14.4/1.15.2/1.16.5/1.17.1/1.18.2]",
+		&Inputs{"1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.14", "1.15", "1.16", "1.17", "1.18"},
 	))
 	println("")
 	installFabric := takeInput("Should the modpack install Fabric? [yes/no]", &Inputs{"y", "yes", "n", "no"})
