@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsxImportSource": "@emotion/react"
+  },
+  "include": ["src/**/*", "ui/src/**/*"]
+}

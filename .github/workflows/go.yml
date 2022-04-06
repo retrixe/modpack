@@ -10,10 +10,10 @@ jobs:
       matrix:
         os: [ubuntu-18.04, macos-latest, windows-latest]
     steps:
-    - name: Set up Go 1.17
+    - name: Set up Go 1.18
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.17
+        go-version: ^1.18
       id: go
 
     - name: Check out code into the Go module directory
@@ -31,12 +31,29 @@ jobs:
         sudo apt-get install --no-install-recommends libwebkit2gtk-4.0-dev
       if: ${{ success() && matrix.os == 'ubuntu-18.04' }}
 
+    - name: Cache .yarn
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-yarn
+      with:
+        path: .yarn
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
     - name: Get dependencies
       run: |
         go get -v -t -d ./...
+        cd ui && yarn install --immutable && cd ..
+#        if [ -f Gopkg.toml ]; then
+#            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+#            dep ensure
+#        fi
 
     - name: Build
-      run: go build -ldflags="-s -w" -v .
+      run: cd ui && yarn build && cd .. && go build -ldflags="-s -w" -v .
       if: ${{ success() && matrix.os != 'windows-latest' }}
 
     - name: Build Windows CLI binary
@@ -44,7 +61,7 @@ jobs:
       if: ${{ success() && matrix.os == 'windows-latest' }}
 
     - name: Build Windows GUI binary
-      run: go build -ldflags="-s -w -H windowsgui" -v .
+      run: cd ui && yarn build && cd .. && go build -ldflags="-s -w -H windowsgui" -v .
       if: ${{ success() && matrix.os == 'windows-latest' }}
 
     - name: Build Windows GUI launcher

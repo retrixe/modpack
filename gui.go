@@ -16,12 +16,37 @@ import (
 var w webview.WebView
 
 // Faq is the HTML for the FAQ page.
-//go:embed src/faq.html
+//go:embed faq.html
 var Faq string
 
 // HTML is the HTML for the main page.
-//go:embed src/modpack.html
+//go:embed modpack.html
 var HTML string
+
+const html = `
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Use minimum-scale=1 to enable GPU rasterization -->
+  <meta
+    name='viewport'
+    content='user-scalable=0, initial-scale=1, minimum-scale=1, width=device-width, height=device-height'
+  />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;700;900&display=swap">
+	<style>
+	body {
+		margin: 0;
+		font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",
+		  Ubuntu,Cantarell,Oxygen-Sans,"Helvetica Neue",Arial,Roboto,sans-serif;
+	}
+  </style>
+</head>
+<body><div id="app"></div><script>initiateReact()</script></body>
+</html>
+`
+
+//go:embed ui/dist/main.js
+var js string
 
 var guiDialogQueryResponse bool
 var guiDialogQueryResponseMutex sync.Mutex
@@ -35,6 +60,8 @@ func runGui() {
 	defer w.Destroy()
 	w.SetSize(540, 360, webview.HintNone)
 	w.SetTitle("ibu's mod installer")
+	// Bind a function to initiate React via webview.Eval.
+	w.Bind("initiateReact", func() { w.Eval(js) })
 	w.Bind("changeVersion", func(name string) {
 		selectedVersionMutex.Lock()
 		minecraftFolderMutex.Lock()
@@ -82,7 +109,7 @@ func runGui() {
 	w.Bind("installMods", func() { go initiateInstall() })
 	w.Bind("showFaq", func() { w.Navigate("data:text/html," + string(Faq)) })
 	w.Bind("showGui", func() { w.Navigate("data:text/html," + strings.ReplaceAll(string(HTML), "+", "%2B")) })
-	w.Navigate("data:text/html," + strings.ReplaceAll(string(HTML), "+", "%2B"))
+	w.Navigate("data:text/html," + strings.ReplaceAll(string(html), "+", "%2B"))
 	w.Run()
 }
 
