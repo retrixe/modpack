@@ -48,13 +48,8 @@ func getLatestFabric() (string, error) {
 }
 
 func downloadFabric(version string, fabricVersion string) ([]byte, error) {
-	resp, err := http.Get("https://meta.fabricmc.net/v2/versions/loader/" + version + "/" +
+	return downloadFile("https://meta.fabricmc.net/v2/versions/loader/" + version + "/" +
 		url.QueryEscape(fabricVersion) + "/profile/zip")
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	return io.ReadAll(resp.Body)
 }
 
 // FabricVersionResponse is the response from querying Fabric's Maven API.

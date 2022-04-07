@@ -121,6 +121,7 @@ func queryUser(query string) bool {
 		w.Eval("document.getElementById('query').textContent = `" + query + "`")
 		w.Eval("M.Modal.getInstance(document.getElementById('modal1')).open()")
 	})
+	// This waits for the mutex to unlock.
 	guiDialogQueryResponseMutex.Lock()
 	defer guiDialogQueryResponseMutex.Unlock()
 	return guiDialogQueryResponse
