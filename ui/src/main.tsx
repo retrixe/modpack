@@ -5,11 +5,9 @@ import { teal, green } from '@mui/material/colors'
 import App from './App'
 
 // TODO:
-// - WelcomeScreen
-// - VersionSelectionScreen
+// - FaqScreen
 // - ModSelectionScreen
 // - InstallConfirmScreen
-// - ModpackFaq
 // - Wire up all this logic with the actual Golang code.
 // - Bundle Roboto font, don't depend on the internet to work properly.
 
