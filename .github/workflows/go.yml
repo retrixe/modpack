@@ -36,7 +36,7 @@ jobs:
       env:
         cache-name: cache-yarn
       with:
-        path: .yarn
+        path: ui/.yarn
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
