@@ -3,27 +3,34 @@ import { Grid, Paper, Typography, Divider, Button } from '@mui/material'
 import WelcomeScreen from './screens/WelcomeScreen'
 import VersionSelectionScreen from './screens/VersionSelectionScreen'
 import ModSelectionScreen from './screens/ModSelectionScreen'
+import Faq from './Faq'
 
 const App = (): JSX.Element => {
+  const [faqOpen, setFaqOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [minecraftFolder, setMinecraftFolderState] = useState('')
   const [minecraftVersion, setMinecraftVersionState] = useState('')
   const [updatableMcVersion, setUpdatableMcVersion] = useState('')
+  const [installFabric, setInstallFabricState] = useState(true)
 
-  // Allow Go to send changes to the Minecraft version and updatable version of Minecraft.
+  // Any changes to Minecraft folder/version should propagate to Go.
+  // Go can also edit the UI via folder prompt, as well as selected and updatable Minecraft versions.
   window.setUpdatableVersionState = setUpdatableMcVersion
-  // Any changes to Minecraft folder/version should propagate to Go. Go can also edit the UI via folder prompt.
   window.setMinecraftVersionState = setMinecraftVersionState
+  window.setMinecraftFolderState = setMinecraftFolderState
   const setMinecraftVersion = (newState: string): void => {
     window.changeVersion(newState)
     setMinecraftVersionState(newState)
   }
-  window.setMinecraftFolderState = setMinecraftFolderState
   const setMinecraftFolder = (newState: string): void => {
     window.updateMinecraftFolder(newState)
     setMinecraftFolderState(newState)
   }
-  // Request UI update to get info about updatable versionn.
+  const toggleInstallFabric = (): void => {
+    window.toggleInstallFabric()
+    setInstallFabricState(state => !state)
+  }
+  // Request UI update once to get info about the current updatable version.
   const calledUiUpdateOnce = useRef(false)
   useEffect(() => {
     if (!calledUiUpdateOnce.current) {
@@ -32,6 +39,7 @@ const App = (): JSX.Element => {
     }
   }, [])
 
+  if (faqOpen) return <Faq close={() => setFaqOpen(false)} />
   return (
     <div css={{ height: '100%', padding: '8px', boxSizing: 'border-box' }}>
       <Grid container spacing={2} height='100%'>
@@ -54,7 +62,7 @@ const App = (): JSX.Element => {
               <b>Step 4:</b> Installation
             </Typography>
             <div css={{ flex: 1 }} />
-            <Button variant='outlined' color='info'>FAQ</Button>
+            <Button variant='outlined' color='info' onClick={() => setFaqOpen(true)}>FAQ</Button>
           </Paper>
         </Grid>
         <Grid item xs={8} md={10} css={{ display: 'flex', flexDirection: 'column', padding: '8px' }}>
@@ -73,7 +81,13 @@ const App = (): JSX.Element => {
               setMinecraftVersion={setMinecraftVersion}
             />
           )}
-          {currentStep === 3 && <ModSelectionScreen setCurrentStep={setCurrentStep} />}
+          {currentStep === 3 && (
+            <ModSelectionScreen
+              setCurrentStep={setCurrentStep}
+              installFabric={installFabric}
+              toggleInstallFabric={toggleInstallFabric}
+            />
+          )}
         </Grid>
       </Grid>
     </div>

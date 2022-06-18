@@ -1,6 +1,7 @@
 interface Window {
   // Golang APIs.
   promptForFolder: () => void
+  toggleInstallFabric: () => void
   updateMinecraftFolder: (folder: string) => void
   changeVersion: (version: string) => void
 

@@ -6,7 +6,6 @@ const VersionSelectionScreen = ({ setCurrentStep, minecraftVersion, setMinecraft
   setMinecraftVersion: (newState: string) => void
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>
 }): JSX.Element => {
-  // TODO: Support oldmodfolder prompt
   const l = (value: string, label: string): string => {
     return value === updatableMcVersion ? `Upgrade existing mods installed for ${label}` : label
   }
@@ -22,6 +21,8 @@ const VersionSelectionScreen = ({ setCurrentStep, minecraftVersion, setMinecraft
           <FormControlLabel value='1.18' control={<Radio />} label={l('1.18', 'Minecraft 1.18.2')} />
           <FormControlLabel value='1.17' control={<Radio />} label={l('1.17', 'Minecraft 1.17.1 (bug-fixes only)')} />
           <FormControlLabel value='1.16' control={<Radio />} label={l('1.16', 'Minecraft 1.16.5 (bug-fixes only)')} />
+          <FormControlLabel value='1.15' control={<Radio />} label={l('1.15', 'Minecraft 1.15.2 (UNSUPPORTED!)')} />
+          <FormControlLabel value='1.14' control={<Radio />} label={l('1.14', 'Minecraft 1.14.5 (UNSUPPORTED!)')} />
         </RadioGroup>
       </FormControl>
       <div css={{ flex: 1 }} />
