@@ -18,6 +18,9 @@ import (
 const modpackVersion = "1.4.1"
 const defaultVersion = "1.18"
 
+// LOW-TODO: Switch to Quilt?
+// LOW-TODO: Create a special profile that loads mods from a special folder?
+
 var selectedVersion = defaultVersion
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
