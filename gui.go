@@ -58,7 +58,7 @@ func runGui() {
 	}
 	w = webview.New(debug)
 	defer w.Destroy()
-	w.SetSize(600, 420, webview.HintNone) // 540/360
+	w.SetSize(640, 480, webview.HintNone) // 540/360
 	w.SetTitle("ibu's mod installer")
 	// Bind a function to initiate React via webview.Eval.
 	w.Bind("initiateReact", func() { w.Eval(js) })

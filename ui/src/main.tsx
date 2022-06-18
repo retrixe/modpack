@@ -4,12 +4,10 @@ import { ThemeProvider, CssBaseline, createTheme } from '@mui/material'
 import { teal, green } from '@mui/material/colors'
 import App from './App'
 
-// TODO:
-// - FaqScreen
-// - ModSelectionScreen
-// - InstallConfirmScreen
-// - Wire up all this logic with the actual Golang code.
-// - Bundle Roboto font, don't depend on the internet to work properly.
+// TODO: Faq
+// TODO: InstallationScreen
+// TODO: Wire up all this logic with the actual Golang code.
+// TODO: Bundle Roboto font, don't depend on the internet to work properly.
 
 const theme = createTheme({
   palette: {

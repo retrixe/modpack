@@ -1,8 +1,9 @@
-import { Button, Typography } from '@mui/material'
+import { Button, Typography, TextField, SvgIcon, IconButton } from '@mui/material'
 
 const WelcomeScreen = ({ setCurrentStep }: {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>
 }): JSX.Element => {
+  // TODO: Set the Minecraft folder
   return (
     <>
       <Typography variant='h5' textAlign='center' gutterBottom>ibu's mod installer</Typography>
@@ -19,9 +20,23 @@ const WelcomeScreen = ({ setCurrentStep }: {
       </Typography>
       <Typography gutterBottom>
         See the FAQ for more info about older Minecraft versions, OptiFine support and
-        a complete list of mods. Check your server's rules before using this.
+        a complete list of mods. Check your server's rules before using these.
       </Typography>
       <div css={{ flex: 1 }} />
+      <div css={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+        <TextField
+          label='Advanced users: Path to game install folder'
+          variant='outlined'
+          css={{ flex: 1, marginRight: '4px' }}
+        />
+        <IconButton size='large' color='primary'>
+          <SvgIcon fontSize='inherit'>
+            <path d='M0 0h24v24H0z' fill='none' />
+            {/* M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z */}
+            <path d='M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z' />
+          </SvgIcon>
+        </IconButton>
+      </div>
       <Button variant='outlined' color='secondary' onClick={() => setCurrentStep(2)}>
         Continue
       </Button>
