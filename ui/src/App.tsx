@@ -3,10 +3,12 @@ import { Grid, Paper, Typography, Divider, Button } from '@mui/material'
 import WelcomeScreen from './screens/WelcomeScreen'
 import VersionSelectionScreen from './screens/VersionSelectionScreen'
 import ModSelectionScreen from './screens/ModSelectionScreen'
+import InstallationScreen from './screens/InstallationScreen'
 import Faq from './Faq'
 
 const App = (): JSX.Element => {
   const [faqOpen, setFaqOpen] = useState(false)
+  const [inProgress, setInProgress] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [minecraftFolder, setMinecraftFolderState] = useState('')
   const [minecraftVersion, setMinecraftVersionState] = useState('')
@@ -15,6 +17,7 @@ const App = (): JSX.Element => {
 
   // Any changes to Minecraft folder/version should propagate to Go.
   // Go can also edit the UI via folder prompt, as well as selected and updatable Minecraft versions.
+  window.setInProgressState = setInProgress
   window.setUpdatableVersionState = setUpdatableMcVersion
   window.setMinecraftVersionState = setMinecraftVersionState
   window.setMinecraftFolderState = setMinecraftFolderState
@@ -62,7 +65,9 @@ const App = (): JSX.Element => {
               <b>Step 4:</b> Installation
             </Typography>
             <div css={{ flex: 1 }} />
-            <Button variant='outlined' color='info' onClick={() => setFaqOpen(true)}>FAQ</Button>
+            <Button variant='outlined' color='info' onClick={() => setFaqOpen(true)} disabled={inProgress}>
+              FAQ
+            </Button>
           </Paper>
         </Grid>
         <Grid item xs={8} md={10} css={{ display: 'flex', flexDirection: 'column', padding: '8px' }}>
@@ -87,6 +92,9 @@ const App = (): JSX.Element => {
               installFabric={installFabric}
               toggleInstallFabric={toggleInstallFabric}
             />
+          )}
+          {currentStep === 4 && (
+            <InstallationScreen inProgress={inProgress} setCurrentStep={setCurrentStep} />
           )}
         </Grid>
       </Grid>

@@ -13,10 +13,8 @@ const theme = createTheme({
 })
 
 createRoot(document.getElementById('app') as HTMLElement).render((
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <App />
+  </ThemeProvider>
 ))

@@ -123,33 +123,25 @@ func initiateInstall() {
 	defer installFabricOptMutex.Unlock()
 	defer minecraftFolderMutex.Unlock()
 	defer w.Dispatch(checkUpdatableAndUpdateVersion)
-	hideMessage()
-	hideError()
-	showProgress()
-	disableButtons()
-	err := installMods(setProgress, queryUser)
+	setError("")             // This is already set in the JavaScript on mount, but whatever.
+	setMessage("Working...") // This is already set in the JavaScript on mount, but whatever.
+	setInProgress(true)
+	defer setInProgress(false)
+	err := installMods(setMessage, queryUser)
 	if err != nil && err.Error() != "Cancelled" {
-		handleError(err)
-		return
+		log.Println(err)
+		setError(err.Error())
+	} else {
+		setMessage("Done! You can now launch Minecraft, select the latest fabric-loader version " +
+			"and enjoy! See the FAQ if you need any more information.")
 	}
-	enableButtons()
-	hideProgress()
-	showMessage()
-}
-
-func handleError(err error) {
-	log.Println(err)
-	setError(err.Error())
-	hideProgress()
-	enableButtons()
 }
 
 func queryUser(query string) bool {
 	guiDialogQueryResponseMutex.Lock()
-	w.Dispatch(func() {
-		w.Eval("document.getElementById('query').textContent = `" + query + "`")
-		w.Eval("M.Modal.getInstance(document.getElementById('modal1')).open()")
-	})
+	// OLD: w.Eval("document.getElementById('query').textContent = `" + query + "`")
+	// OLD: w.Eval("M.Modal.getInstance(document.getElementById('modal1')).open()")
+	w.Dispatch(func() { w.Eval("window.setQueryState(`" + query + "`)") })
 	// This waits for the mutex to unlock.
 	guiDialogQueryResponseMutex.Lock()
 	defer guiDialogQueryResponseMutex.Unlock()
@@ -173,7 +165,26 @@ func checkUpdatableAndUpdateVersion() {
 	}
 }
 
-func disableButtons() {
+// setInProgress disables buttons and shows the progress bar.
+func setInProgress(inProgress bool) {
+	w.Dispatch(func() {
+		if inProgress {
+			w.Eval("window.setInProgressState(true)")
+		} else {
+			w.Eval("window.setInProgressState(false)")
+		}
+	})
+}
+
+func setMessage(content string) {
+	w.Dispatch(func() { w.Eval("window.setMessageState('" + content + "')") })
+}
+
+func setError(content string) {
+	w.Dispatch(func() { w.Eval("window.setErrorState('" + content + "')") })
+}
+
+/* OLD: func disableButtons() {
 	w.Dispatch(func() {
 		w.Eval(`
       document.getElementById('faq').setAttribute('disabled', 'disabled')
@@ -235,4 +246,4 @@ func hideMessage() {
 	w.Dispatch(func() {
 		w.Eval("document.getElementById('message').setAttribute('style', 'display: none;');")
 	})
-}
+} */
