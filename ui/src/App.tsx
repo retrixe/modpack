@@ -42,6 +42,10 @@ const App = (): JSX.Element => {
     }
   }, [])
 
+  const handleFaqOpen = (): void => { // LOW-TODO: There's probably better ways to do this lol
+    if (currentStep === 4) setCurrentStep(1)
+    setFaqOpen(true)
+  }
   if (faqOpen) return <Faq close={() => setFaqOpen(false)} />
   return (
     <div css={{ height: '100%', padding: '8px', boxSizing: 'border-box' }}>
@@ -65,7 +69,7 @@ const App = (): JSX.Element => {
               <b>Step 4:</b> Installation
             </Typography>
             <div css={{ flex: 1 }} />
-            <Button variant='outlined' color='info' onClick={() => setFaqOpen(true)} disabled={inProgress}>
+            <Button variant='outlined' color='info' onClick={handleFaqOpen} disabled={inProgress}>
               FAQ
             </Button>
           </Paper>

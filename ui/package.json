@@ -8,7 +8,7 @@
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.2.1",
   "engines": {
     "browsers": "ie >= 9"
   },
@@ -29,7 +29,8 @@
     "start:go:default": "cd .. && env DEBUG=true go run .",
     "start:go:windows": "cd .. && set DEBUG=true && go run .",
     "build": "parcel build src/main.tsx --no-source-maps",
-    "build:dev": "parcel build src/main.tsx"
+    "build:dev": "parcel build src/main.tsx",
+    "dev": "parcel watch src/main.tsx"
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",
