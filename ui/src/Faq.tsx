@@ -17,7 +17,7 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
     <div css={{ padding: '8px' }}>
       <p><strong>Is this Fabric or Forge?</strong><br /> Fabric.</p>
 
-      <p><strong>What Minecraft versions are supported?</strong><br /> 1.16, 1.17, 1.18 and 1.19 are being actively updated.
+      <p><strong>What Minecraft versions are supported?</strong><br /> 1.16, 1.17 and 1.18 are being actively updated.
         1.14 and 1.15 are unsupported, may have bugs (e.g. updating Fabric manually will break them) and should be avoided.
       </p>
 

@@ -16,11 +16,11 @@ import (
 var w webview.WebView
 
 // Faq is the HTML for the FAQ page.
-//go:embed faq.html
+//go:embed src/faq.html
 var Faq string
 
 // HTML is the HTML for the main page.
-//go:embed modpack.html
+//go:embed src/modpack.html
 var HTML string
 
 // LOW-TODO: Bundle Roboto font, don't depend on the internet for this?

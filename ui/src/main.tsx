@@ -4,9 +4,6 @@ import { ThemeProvider, CssBaseline, createTheme } from '@mui/material'
 import { teal, green } from '@mui/material/colors'
 import App from './App'
 
-// TODO: Faq
-// TODO: InstallationScreen
-
 const theme = createTheme({
   palette: {
     mode: 'dark',
