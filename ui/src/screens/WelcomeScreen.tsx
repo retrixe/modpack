@@ -1,9 +1,10 @@
 import { Button, Typography, TextField, SvgIcon, IconButton } from '@mui/material'
 
-const WelcomeScreen = ({ setCurrentStep }: {
+const WelcomeScreen = ({ setCurrentStep, minecraftFolder, setMinecraftFolder }: {
+  minecraftFolder: string
+  setMinecraftFolder: (newState: string) => void
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>
 }): JSX.Element => {
-  // TODO: Set the Minecraft folder
   return (
     <>
       <Typography variant='h5' textAlign='center' gutterBottom>ibu's mod installer</Typography>
@@ -25,11 +26,13 @@ const WelcomeScreen = ({ setCurrentStep }: {
       <div css={{ flex: 1 }} />
       <div css={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
         <TextField
+          value={minecraftFolder}
+          onChange={e => setMinecraftFolder(e.target.value)}
           label='Advanced users: Path to game install folder'
           variant='outlined'
           css={{ flex: 1, marginRight: '4px' }}
         />
-        <IconButton size='large' color='primary'>
+        <IconButton size='large' color='primary' onClick={() => window.promptForFolder()}>
           <SvgIcon fontSize='inherit'>
             <path d='M0 0h24v24H0z' fill='none' />
             {/* M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z */}

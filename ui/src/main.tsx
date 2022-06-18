@@ -6,8 +6,6 @@ import App from './App'
 
 // TODO: Faq
 // TODO: InstallationScreen
-// TODO: Wire up all this logic with the actual Golang code.
-// TODO: Bundle Roboto font, don't depend on the internet to work properly.
 
 const theme = createTheme({
   palette: {

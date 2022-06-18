@@ -1,11 +1,15 @@
 import { Button, Typography, FormControl, FormControlLabel, RadioGroup, Radio } from '@mui/material'
 
-const VersionSelectionScreen = ({ setCurrentStep }: {
+const VersionSelectionScreen = ({ setCurrentStep, minecraftVersion, setMinecraftVersion, updatableMcVersion }: {
+  updatableMcVersion: string
+  minecraftVersion: string
+  setMinecraftVersion: (newState: string) => void
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>
 }): JSX.Element => {
   // TODO: Support oldmodfolder prompt
-  // TODO: Receive upgrade info from Go
-  // TODO: Actually set Minecraft version somewhere
+  const l = (value: string, label: string): string => {
+    return value === updatableMcVersion ? `Upgrade existing mods installed for ${label}` : label
+  }
   return (
     <>
       <Typography variant='h5' textAlign='center' gutterBottom>ibu's mod installer</Typography>
@@ -13,12 +17,11 @@ const VersionSelectionScreen = ({ setCurrentStep }: {
         Select Minecraft version to install mods for:
       </Typography>
       <FormControl>
-        <RadioGroup>
-          <FormControlLabel value='upgrade' control={<Radio />} label='Upgrade existing mods installed for Minecraft 1.19' />
-          <FormControlLabel value='1.19' control={<Radio />} label='Minecraft 1.19' />
-          <FormControlLabel value='1.18.2' control={<Radio />} label='Minecraft 1.18.2' />
-          <FormControlLabel value='1.17.1' control={<Radio />} label='Minecraft 1.17.1 (bug-fixes only)' />
-          <FormControlLabel value='1.16.5' control={<Radio />} label='Minecraft 1.16.5 (bug-fixes only)' />
+        <RadioGroup value={minecraftVersion} onChange={event => setMinecraftVersion(event.target.value)}>
+          <FormControlLabel value='1.19' control={<Radio />} label={l('1.19', 'Minecraft 1.19')} />
+          <FormControlLabel value='1.18' control={<Radio />} label={l('1.18', 'Minecraft 1.18.2')} />
+          <FormControlLabel value='1.17' control={<Radio />} label={l('1.17', 'Minecraft 1.17.1 (bug-fixes only)')} />
+          <FormControlLabel value='1.16' control={<Radio />} label={l('1.16', 'Minecraft 1.16.5 (bug-fixes only)')} />
         </RadioGroup>
       </FormControl>
       <div css={{ flex: 1 }} />

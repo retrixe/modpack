@@ -23,6 +23,7 @@ var Faq string
 //go:embed modpack.html
 var HTML string
 
+// LOW-TODO: Bundle Roboto font, don't depend on the internet for this?
 const html = `
 <html lang="en">
 <head>
@@ -68,11 +69,11 @@ func runGui() {
 		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		selectedVersion = name
-		if areModsUpdatable() == selectedVersion {
+		/* OLD: if areModsUpdatable() == selectedVersion {
 			w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		} else {
 			w.Eval("document.getElementById('install').innerHTML = 'Install'")
-		}
+		} */
 	})
 	w.Bind("toggleInstallFabric", func() {
 		installFabricOptMutex.Lock()
@@ -104,7 +105,8 @@ func runGui() {
 		minecraftFolder = directory
 		checkUpdatableAndUpdateVersion()
 		folder := strings.ReplaceAll(strings.ReplaceAll(directory, "\\", "\\\\"), "\"", "\\\"")
-		w.Eval("document.getElementById('gamedir-input').value = \"" + folder + "\"")
+		// OLD: w.Eval("document.getElementById('gamedir-input').value = \"" + folder + "\"")
+		w.Eval("window.setMinecraftFolderState(\"" + folder + "\")")
 	})
 	w.Bind("installMods", func() { go initiateInstall() })
 	w.Bind("showFaq", func() { w.Navigate("data:text/html," + string(Faq)) })
@@ -158,12 +160,16 @@ func checkUpdatableAndUpdateVersion() {
 	updatable := areModsUpdatable()
 	if updatable != "" {
 		selectedVersion = updatable
-		w.Eval("document.getElementById('select-version').value = '" + selectedVersion + "'")
-		w.Eval("document.getElementById('install').innerHTML = 'Update'")
+		// OLD: w.Eval("document.getElementById('select-version').value = '" + selectedVersion + "'")
+		// OLD: w.Eval("document.getElementById('install').innerHTML = 'Update'")
+		w.Eval("setMinecraftVersionState('" + selectedVersion + "')")
+		w.Eval("setUpdatableVersionState('" + selectedVersion + "')")
 	} else {
 		selectedVersion = defaultVersion
-		w.Eval("document.getElementById('select-version').value = '" + defaultVersion + "'")
-		w.Eval("document.getElementById('install').innerHTML = 'Install'")
+		// OLD: w.Eval("document.getElementById('select-version').value = '" + defaultVersion + "'")
+		// OLD: w.Eval("document.getElementById('install').innerHTML = 'Install'")
+		w.Eval("setMinecraftVersionState('" + selectedVersion + "')")
+		w.Eval("setUpdatableVersionState('')")
 	}
 }
 

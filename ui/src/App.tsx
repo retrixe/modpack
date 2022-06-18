@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Grid, Paper, Typography, Divider, Button } from '@mui/material'
 import WelcomeScreen from './screens/WelcomeScreen'
 import VersionSelectionScreen from './screens/VersionSelectionScreen'
@@ -6,6 +6,31 @@ import ModSelectionScreen from './screens/ModSelectionScreen'
 
 const App = (): JSX.Element => {
   const [currentStep, setCurrentStep] = useState(1)
+  const [minecraftFolder, setMinecraftFolderState] = useState('')
+  const [minecraftVersion, setMinecraftVersionState] = useState('')
+  const [updatableMcVersion, setUpdatableMcVersion] = useState('')
+
+  // Allow Go to send changes to the Minecraft version and updatable version of Minecraft.
+  window.setUpdatableVersionState = setUpdatableMcVersion
+  // Any changes to Minecraft folder/version should propagate to Go. Go can also edit the UI via folder prompt.
+  window.setMinecraftVersionState = setMinecraftVersionState
+  const setMinecraftVersion = (newState: string): void => {
+    window.changeVersion(newState)
+    setMinecraftVersionState(newState)
+  }
+  window.setMinecraftFolderState = setMinecraftFolderState
+  const setMinecraftFolder = (newState: string): void => {
+    window.updateMinecraftFolder(newState)
+    setMinecraftFolderState(newState)
+  }
+  // Request UI update to get info about updatable versionn.
+  const calledUiUpdateOnce = useRef(false)
+  useEffect(() => {
+    if (!calledUiUpdateOnce.current) {
+      calledUiUpdateOnce.current = true
+      window.updateMinecraftFolder('')
+    }
+  }, [])
 
   return (
     <div css={{ height: '100%', padding: '8px', boxSizing: 'border-box' }}>
@@ -26,15 +51,28 @@ const App = (): JSX.Element => {
             </Typography>
             <Divider light sx={{ marginTop: '8px', marginBottom: '8px' }} />
             <Typography variant={currentStep === 4 ? 'h6' : undefined}>
-              <b>Step 4:</b> Confirm installation
+              <b>Step 4:</b> Installation
             </Typography>
             <div css={{ flex: 1 }} />
             <Button variant='outlined' color='info'>FAQ</Button>
           </Paper>
         </Grid>
         <Grid item xs={8} md={10} css={{ display: 'flex', flexDirection: 'column', padding: '8px' }}>
-          {currentStep === 1 && <WelcomeScreen setCurrentStep={setCurrentStep} />}
-          {currentStep === 2 && <VersionSelectionScreen setCurrentStep={setCurrentStep} />}
+          {currentStep === 1 && (
+            <WelcomeScreen
+              setCurrentStep={setCurrentStep}
+              minecraftFolder={minecraftFolder}
+              setMinecraftFolder={setMinecraftFolder}
+            />
+          )}
+          {currentStep === 2 && (
+            <VersionSelectionScreen
+              setCurrentStep={setCurrentStep}
+              updatableMcVersion={updatableMcVersion}
+              minecraftVersion={minecraftVersion}
+              setMinecraftVersion={setMinecraftVersion}
+            />
+          )}
           {currentStep === 3 && <ModSelectionScreen setCurrentStep={setCurrentStep} />}
         </Grid>
       </Grid>
