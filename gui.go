@@ -15,14 +15,6 @@ import (
 
 var w webview.WebView
 
-// Faq is the HTML for the FAQ page.
-//go:embed src/faq.html
-var Faq string
-
-// HTML is the HTML for the main page.
-//go:embed src/modpack.html
-var HTML string
-
 // LOW-TODO: Bundle Roboto font, don't depend on the internet for this?
 const html = `
 <html lang="en">
@@ -69,11 +61,6 @@ func runGui() {
 		defer selectedVersionMutex.Unlock()
 		defer minecraftFolderMutex.Unlock()
 		selectedVersion = name
-		/* OLD: if areModsUpdatable() == selectedVersion {
-			w.Eval("document.getElementById('install').innerHTML = 'Update'")
-		} else {
-			w.Eval("document.getElementById('install').innerHTML = 'Install'")
-		} */
 	})
 	w.Bind("toggleInstallFabric", func() {
 		installFabricOptMutex.Lock()
@@ -105,12 +92,9 @@ func runGui() {
 		minecraftFolder = directory
 		checkUpdatableAndUpdateVersion()
 		folder := strings.ReplaceAll(strings.ReplaceAll(directory, "\\", "\\\\"), "\"", "\\\"")
-		// OLD: w.Eval("document.getElementById('gamedir-input').value = \"" + folder + "\"")
 		w.Eval("window.setMinecraftFolderState(\"" + folder + "\")")
 	})
 	w.Bind("installMods", func() { go initiateInstall() })
-	w.Bind("showFaq", func() { w.Navigate("data:text/html," + string(Faq)) })
-	w.Bind("showGui", func() { w.Navigate("data:text/html," + strings.ReplaceAll(string(HTML), "+", "%2B")) })
 	w.Navigate("data:text/html," + strings.ReplaceAll(string(html), "+", "%2B"))
 	w.Run()
 }
@@ -139,8 +123,6 @@ func initiateInstall() {
 
 func queryUser(query string) bool {
 	guiDialogQueryResponseMutex.Lock()
-	// OLD: w.Eval("document.getElementById('query').textContent = `" + query + "`")
-	// OLD: w.Eval("M.Modal.getInstance(document.getElementById('modal1')).open()")
 	w.Dispatch(func() { w.Eval("window.setQueryState(`" + query + "`)") })
 	// This waits for the mutex to unlock.
 	guiDialogQueryResponseMutex.Lock()
@@ -152,17 +134,21 @@ func checkUpdatableAndUpdateVersion() {
 	updatable := areModsUpdatable()
 	if updatable != "" {
 		selectedVersion = updatable
-		// OLD: w.Eval("document.getElementById('select-version').value = '" + selectedVersion + "'")
-		// OLD: w.Eval("document.getElementById('install').innerHTML = 'Update'")
 		w.Eval("setMinecraftVersionState('" + selectedVersion + "')")
 		w.Eval("setUpdatableVersionState('" + selectedVersion + "')")
 	} else {
 		selectedVersion = defaultVersion
-		// OLD: w.Eval("document.getElementById('select-version').value = '" + defaultVersion + "'")
-		// OLD: w.Eval("document.getElementById('install').innerHTML = 'Install'")
 		w.Eval("setMinecraftVersionState('" + selectedVersion + "')")
 		w.Eval("setUpdatableVersionState('')")
 	}
+}
+
+func setMessage(content string) {
+	w.Dispatch(func() { w.Eval("window.setMessageState('" + content + "')") })
+}
+
+func setError(content string) {
+	w.Dispatch(func() { w.Eval("window.setErrorState('" + content + "')") })
 }
 
 // setInProgress disables buttons and shows the progress bar.
@@ -175,75 +161,3 @@ func setInProgress(inProgress bool) {
 		}
 	})
 }
-
-func setMessage(content string) {
-	w.Dispatch(func() { w.Eval("window.setMessageState('" + content + "')") })
-}
-
-func setError(content string) {
-	w.Dispatch(func() { w.Eval("window.setErrorState('" + content + "')") })
-}
-
-/* OLD: func disableButtons() {
-	w.Dispatch(func() {
-		w.Eval(`
-      document.getElementById('faq').setAttribute('disabled', 'disabled')
-			document.getElementById('install').setAttribute('disabled', 'disabled')
-      document.getElementById('install-fabric').setAttribute('disabled', 'disabled')
-			document.getElementById('select-version').setAttribute('disabled', 'disabled')
-		`)
-	})
-}
-func enableButtons() {
-	w.Dispatch(func() {
-		w.Eval(`
-      document.getElementById('faq').removeAttribute('disabled')
-			document.getElementById('install').removeAttribute('disabled')
-      document.getElementById('install-fabric').removeAttribute('disabled')
-			document.getElementById('select-version').removeAttribute('disabled')
-		`)
-	})
-}
-
-func showProgress() {
-	w.Dispatch(func() {
-		w.Eval("document.getElementById('progress').removeAttribute('style'); " +
-			"document.getElementById('progress-display').removeAttribute('style')")
-	})
-}
-func setProgress(content string) {
-	w.Dispatch(func() {
-		w.Eval("document.getElementById('progress').textContent = '" + content + "'")
-	})
-}
-func hideProgress() {
-	setProgress("")
-	w.Dispatch(func() {
-		w.Eval("document.getElementById('progress').setAttribute('style', 'display: none;'); " +
-			"document.getElementById('progress-display').setAttribute('style', 'display: none;')")
-	})
-}
-
-func setError(content string) {
-	w.Dispatch(func() {
-		w.Eval("document.getElementById('error').removeAttribute('style'); " +
-			"document.getElementById('error').textContent = 'Error: " + content + "'")
-	})
-}
-func hideError() {
-	setError("")
-	w.Dispatch(func() {
-		w.Eval("document.getElementById('error').setAttribute('style', 'display: none;');")
-	})
-}
-
-func showMessage() {
-	w.Dispatch(func() {
-		w.Eval("document.getElementById('message').removeAttribute('style')")
-	})
-}
-func hideMessage() {
-	w.Dispatch(func() {
-		w.Eval("document.getElementById('message').setAttribute('style', 'display: none;');")
-	})
-} */
