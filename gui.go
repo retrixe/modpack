@@ -116,8 +116,8 @@ func initiateInstall() {
 		log.Println(err)
 		setError(err.Error())
 	} else {
-		setMessage("Done! You can now launch Minecraft, select the latest fabric-loader version " +
-			"and enjoy! See the FAQ if you need any more information.")
+		setMessage("Done! You can now launch Minecraft, select the latest fabric-loader or quilt-loader" +
+			" version, and enjoy! See the FAQ if you need any more information.")
 	}
 }
 

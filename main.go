@@ -18,7 +18,6 @@ import (
 const modpackVersion = "1.4.1"
 const defaultVersion = "1.18"
 
-// LOW-TODO: Switch to Quilt?
 // LOW-TODO: Create a special profile that loads mods from a special folder?
 
 var selectedVersion = defaultVersion
@@ -60,26 +59,50 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 	}
 	if installFabricOpt {
 		s := modVersion.Fabric
+		loaderName := "Fabric"
+		if strings.HasPrefix(s, "quilt:") {
+			loaderName = "Quilt"
+			s = s[6:]
+		}
 		if s == "latest" {
-			updateProgress("Querying latest Fabric version...")
-			s, err = getLatestFabric()
+			updateProgress("Querying latest " + loaderName + " version...")
+			s, err = getLatestFabric(loaderName == "Quilt")
 			if err != nil {
 				return err
 			}
 		}
-		updateProgress("Downloading Fabric...")
+		updateProgress("Downloading " + loaderName + "...")
 		version := modVersion.FullVersion
-		if version == "" {
+		if version == "" { // some old compatibility if
 			version = selectedVersion
 		}
-		file, err := downloadFabric(version, s)
-		if err != nil {
-			return err
-		}
-		updateProgress("Installing Fabric...")
-		err = unzipFile(file, filepath.Join(minecraftFolder, "versions"), nil, nil)
-		if err != nil {
-			return err
+		if loaderName == "Quilt" {
+			file, err := downloadQuilt(version, s)
+			if err != nil {
+				return err
+			}
+			updateProgress("Installing Quilt...")
+			versionName := "quilt-loader-" + s + "-" + version
+			versionFolder := filepath.Join(minecraftFolder, "versions", versionName)
+			err = os.MkdirAll(versionFolder, os.ModePerm)
+			if err != nil {
+				return err
+			}
+			err = os.WriteFile(filepath.Join(versionFolder, versionName+".json"), file, os.ModePerm)
+			if err != nil {
+				return err
+			}
+
+		} else {
+			file, err := downloadFabric(version, s)
+			if err != nil {
+				return err
+			}
+			updateProgress("Installing Fabric...")
+			err = unzipFile(file, filepath.Join(minecraftFolder, "versions"), nil, nil)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

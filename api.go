@@ -36,8 +36,12 @@ func downloadFile(url string) ([]byte, error) {
 	return io.ReadAll(resp.Body)
 }
 
-func getLatestFabric() (string, error) {
-	resp, err := http.Get("https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml")
+func getLatestFabric(quilt bool) (string, error) {
+	url := "https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml"
+	if quilt {
+		url = "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml"
+	}
+	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}
@@ -50,6 +54,11 @@ func getLatestFabric() (string, error) {
 func downloadFabric(version string, fabricVersion string) ([]byte, error) {
 	return downloadFile("https://meta.fabricmc.net/v2/versions/loader/" + version + "/" +
 		url.QueryEscape(fabricVersion) + "/profile/zip")
+}
+
+func downloadQuilt(version string, quiltVersion string) ([]byte, error) {
+	return downloadFile("https://meta.quiltmc.org/v3/versions/loader/" + version + "/" +
+		url.QueryEscape(quiltVersion) + "/profile/json")
 }
 
 // FabricVersionResponse is the response from querying Fabric's Maven API.

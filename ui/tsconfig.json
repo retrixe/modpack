@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["ES2016", "DOM"],
     "jsx": "react-jsx",
     "strict": true,
     "skipLibCheck": true,

@@ -95,6 +95,7 @@ const App = (): JSX.Element => {
               setCurrentStep={setCurrentStep}
               installFabric={installFabric}
               toggleInstallFabric={toggleInstallFabric}
+              minecraftVersion={minecraftVersion}
             />
           )}
           {currentStep === 4 && (

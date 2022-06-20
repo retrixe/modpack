@@ -1,18 +1,23 @@
 import { Button, Typography, FormControlLabel, Checkbox } from '@mui/material'
 
-const ModSelectionScreen = ({ setCurrentStep, installFabric, toggleInstallFabric }: {
+const ModSelectionScreen = ({ setCurrentStep, minecraftVersion, installFabric, toggleInstallFabric }: {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>
   toggleInstallFabric: () => void
   installFabric: boolean
+  minecraftVersion: string
 }): JSX.Element => {
   const toggleFabric = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
     if ((checked && !installFabric) || (!checked && installFabric)) toggleInstallFabric()
   }
+  // Yes, it's not pretty, but it'll be fixed eventually.
+  const fabricVersions = ['1.18', '1.17', '1.16', '1.15', '1.14']
+  fabricVersions.map(version => minecraftVersion.startsWith(version))
+  const loaderName = fabricVersions.includes(minecraftVersion.substring(0, 4)) ? 'Fabric' : 'Quilt'
   return (
     <>
       <Typography variant='h5' textAlign='center' gutterBottom>ibu's mod installer</Typography>
       <FormControlLabel
-        label={'Install Fabric Loader (uncheck if you already have it and don\'t want to update it)'}
+        label={`Install ${loaderName} Loader (uncheck if you already have it and don't want to update it)`}
         control={<Checkbox checked={installFabric} onChange={toggleFabric} />}
         css={{ marginBottom: '8px' }}
       />
