@@ -52,7 +52,7 @@ func runGui() {
 	w = webview.New(debug)
 	defer w.Destroy()
 	w.SetSize(640, 480, webview.HintNone) // 540/360
-	w.SetTitle("ibu's mod installer")
+	w.SetTitle("ibu's mod installer " + modpackVersion)
 	// Bind a function to initiate React via webview.Eval.
 	w.Bind("initiateReact", func() { w.Eval(js) })
 	w.Bind("changeVersion", func(name string) {

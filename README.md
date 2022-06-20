@@ -4,7 +4,7 @@ A simple and light mod pack for Fabric users with the bare essentials.
 
 This is a GUI installer that makes it easy to install and update the mods.
 
-![Welcome Screen](https://cdn.discordapp.com/attachments/588340346841464835/988554355923886160/unknown.png)
+![Welcome Screen](https://cdn.discordapp.com/attachments/588340346841464835/988555281166397450/unknown.png)
 
 ## Installation
 

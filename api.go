@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 )
 
 func getModVersions(version string) (*ModVersion, error) {
@@ -36,10 +37,16 @@ func downloadFile(url string) ([]byte, error) {
 	return io.ReadAll(resp.Body)
 }
 
+// QuiltMavenRepositoryURL points to the base URL of Quilt's Maven repo.
+const QuiltMavenRepositoryURL = "https://maven.quiltmc.org/repository/release/"
+
+// FabricMavenRepositoryURL points to the base URL of Fabric's Maven repo.
+const FabricMavenRepositoryURL = "https://maven.fabricmc.net/"
+
 func getLatestFabric(quilt bool) (string, error) {
-	url := "https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml"
+	url := FabricMavenRepositoryURL + "net/fabricmc/fabric-loader/maven-metadata.xml"
 	if quilt {
-		url = "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml"
+		url = QuiltMavenRepositoryURL + "org/quiltmc/quilt-loader/maven-metadata.xml"
 	}
 	resp, err := http.Get(url)
 	if err != nil {
@@ -57,8 +64,14 @@ func downloadFabric(version string, fabricVersion string) ([]byte, error) {
 }
 
 func downloadQuilt(version string, quiltVersion string) ([]byte, error) {
-	return downloadFile("https://meta.quiltmc.org/v3/versions/loader/" + version + "/" +
+	f, err := downloadFile("https://meta.quiltmc.org/v3/versions/loader/" + version + "/" +
 		url.QueryEscape(quiltVersion) + "/profile/json")
+	if err != nil {
+		return nil, err
+	}
+	sep := strings.Split(string(f), "org.quiltmc:hashed")
+	sep[1] = strings.Replace(string(sep[1]), QuiltMavenRepositoryURL, FabricMavenRepositoryURL, 1)
+	return []byte(strings.Join(sep, "net.fabricmc:intermediary")), nil
 }
 
 // FabricVersionResponse is the response from querying Fabric's Maven API.
