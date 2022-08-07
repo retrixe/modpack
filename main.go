@@ -15,8 +15,8 @@ import (
 	"sync"
 )
 
-const modpackVersion = "1.5.0"
-const defaultVersion = "1.19"
+const modpackVersion = "1.5.1"
+const defaultVersion = "1.19.2"
 
 // LOW-TODO: Create a special profile that loads mods from a special folder?
 

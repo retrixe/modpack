@@ -61,9 +61,9 @@ func InteractiveCliInstall() {
 
 	// Take inputs.
 	selectedVersion = getMajorMinecraftVersion(takeInput(
-		"Version of Minecraft to use? [1.14.4/1.15.2/1.16.5/1.17.1/1.18.2/1.19]",
+		"Version of Minecraft to use? [1.14.4/1.15.2/1.16.5/1.17.1/1.18.2/1.19.2]",
 		&Inputs{
-			"1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19",
+			"1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19.2",
 			"1.14", "1.15", "1.16", "1.17", "1.18", "1.19",
 		},
 	))

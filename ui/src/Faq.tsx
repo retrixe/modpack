@@ -49,16 +49,17 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
         any incompatibilities to me, but it is likely you will be told not to use OptiFine.
       </p>
 
-      <p><strong>Full list for 1.16/1.17/1.18/1.19:</strong><br /> Architectury <i>(lib)</i>, Capes,
-        ChunkBorders (1.16 only), Chat Utils, Cloth Config <i>(lib)</i>, Command Macros, Continuity
-        (1.17+), Dark Loading Screen (1.17+)/Splash (1.16), Dynamic FPS, EasierChests, Fabric API
-        (1.18 and lower)/Quilt Standard Libraries (1.19+) <i>(lib)</i>, Fabric Kotlin <i>(lib)</i>,
-        FMapOverlayMod, VoxelMap (1.16/1.17), Hwyla/Wthit, Hydrogen (1.16/1.17), Indium <i>(lib)</i>,
-        Iris, LambdaBetterGrass, lambDynamicLights, LazyDFU (until 1.19), Ok Zoomer (1.16)/WI-Zoom
-        (1.17+), LightOverlay, Lithium, M-Tape, MaLiLib <i>(lib)</i>, Mc122477Fix, MiniHUD,
-        MobCountMod, ModMenu, MyBrightness, Phosphor or Starlight, ResolutionControl+,
-        ScreenshotToClipboard, ShulkerBoxTooltip, Sodium, ToroHealth, Watson, WorldEditCUI, Xaero's
-        World Map/Minimap Fair-Play (1.18+)
+      <p><strong>Full list for 1.16/1.17/1.18/1.19:</strong><br /> Architectury <i>(lib)</i>,
+        badpackets (1.19+), Capes, ChunkBorders (1.16 only), Chat Utils, Cloth Config <i>(lib)</i>,
+        Command Macros, Continuity (1.17+), Dark Loading Screen (1.17+)/Splash (1.16), Dynamic FPS,
+        EasierChests, Fabric API (1.18 and lower)/Quilt Standard Libraries (1.19+) <i>(lib)</i>,
+        Fabric Kotlin <i>(lib)</i>, FMapOverlayMod, VoxelMap (1.16/1.17), Hwyla/Wthit, Hydrogen
+        (1.16/1.17), Indium <i>(lib)</i>, Iris, LambdaBetterGrass, lambDynamicLights, LazyDFU, Ok
+        Zoomer (1.16)/WI-Zoom (1.17+), LightOverlay, Lithium, M-Tape, MaLiLib <i>(lib)</i>,
+        Mc122477Fix, MiniHUD, MobCountMod, ModMenu, MyBrightness (1.16-1.18) or Gamma Utils (1.19+),
+        Phosphor (1.16) or Starlight (1.17+), ResolutionControl+, ScreenshotToClipboard,
+        ShulkerBoxTooltip, Sodium, ToroHealth, Watson, WorldEditCUI, Xaero's World Map/Minimap
+        Fair-Play (1.18+)
       </p>
 
       <p><strong>What are the mods marked as <i>(lib)</i>?</strong><br /> These are mods required by
