@@ -15,13 +15,12 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
     </AppBar>
     <Toolbar />
     <div css={{ padding: '8px' }}>
-      <p><strong>Is this Fabric or Forge? What's Quilt?</strong><br /> On Minecraft 1.18 and lower,
-        this modpack uses Fabric. Since Minecraft 1.19, this modpack uses Quilt, a Fabric
-        replacement that's compatible with existing Fabric mods.
+      <p><strong>Is this Fabric or Forge? What's Quilt?</strong><br /> Since Minecraft 1.18, this modpack uses Quilt,
+        a Fabric replacement compatible with existing Fabric mods. On older versions, Fabric is still used.
       </p>
 
-      <p><strong>What Minecraft versions are supported?</strong><br /> 1.16, 1.17, 1.18 and 1.19 are still updated.
-        1.14 and 1.15 are unsupported, may have bugs (e.g. updating Fabric manually will break them) and should be avoided.
+      <p><strong>What Minecraft versions are supported?</strong><br /> 1.18 and 1.19 are still updated. 1.14 through 1.17
+        are unsupported, may have bugs (e.g. updating Fabric manually will break them) and should be avoided.
       </p>
 
       <p><strong>Does this modpack get updates?</strong><br /> Yes! You can re-run the installer to get the latest updates
@@ -35,6 +34,16 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
 
       <p><strong>How do I zoom?</strong><br /> Use the V key.</p>
 
+      <p><strong>Full list for 1.18/1.19:</strong><br /> Architectury <i>(lib)</i>, badpackets (1.19+),
+        Capes, Chat Utils, Cloth Config <i>(lib)</i>, Command Macros, Continuity, Dark Loading Screen,
+        Dynamic FPS, EasierChests, Quilt Standard Libraries <i>(lib)</i>, Fabric Kotlin <i>(lib)</i>,
+        FMapOverlayMod, Hwyla/Wthit, Indium <i>(lib)</i>, Iris, LambdaBetterGrass, lambDynamicLights,
+        LazyDFU, Ok Zoomer (1.16)/WI-Zoom (1.17+), LightOverlay, Lithium, M-Tape, MaLiLib <i>(lib)</i>,
+        Mc122477Fix, MiniHUD, MobCountMod, ModMenu, MyBrightness (1.16-1.18) or Gamma Utils (1.19+),
+        Starlight, ResolutionControl+, ScreenshotToClipboard, ShulkerBoxTooltip, Sodium, ToroHealth,
+        Watson, WorldEditCUI, Xaero's World Map/Minimap Fair-Play
+      </p>
+
       <p><strong>OptiFine and 1.16+?</strong><br /> Due to OptiFine being slow and problematic, it has been replaced with Iris+Sodium
         and replacement mods for capes, zoom, show fps, better grass, connected textures (1.17+) and dynamic lights. A full list
         of replacement mods can be found at <a>https://lambdaurora.dev/optifine_alternatives/</a> for resource pack features. You
@@ -47,19 +56,6 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
         Disable Capes, LambdaBetterGrass, Continuity, lambDynamicLights, Indium, Iris, Sodium,
         Lithium, Hydrogen and Phosphor/Starlight before using OptiFine with my modpack. Report
         any incompatibilities to me, but it is likely you will be told not to use OptiFine.
-      </p>
-
-      <p><strong>Full list for 1.16/1.17/1.18/1.19:</strong><br /> Architectury <i>(lib)</i>,
-        badpackets (1.19+), Capes, ChunkBorders (1.16 only), Chat Utils, Cloth Config <i>(lib)</i>,
-        Command Macros, Continuity (1.17+), Dark Loading Screen (1.17+)/Splash (1.16), Dynamic FPS,
-        EasierChests, Fabric API (1.18 and lower)/Quilt Standard Libraries (1.19+) <i>(lib)</i>,
-        Fabric Kotlin <i>(lib)</i>, FMapOverlayMod, VoxelMap (1.16/1.17), Hwyla/Wthit, Hydrogen
-        (1.16/1.17), Indium <i>(lib)</i>, Iris, LambdaBetterGrass, lambDynamicLights, LazyDFU, Ok
-        Zoomer (1.16)/WI-Zoom (1.17+), LightOverlay, Lithium, M-Tape, MaLiLib <i>(lib)</i>,
-        Mc122477Fix, MiniHUD, MobCountMod, ModMenu, MyBrightness (1.16-1.18) or Gamma Utils (1.19+),
-        Phosphor (1.16) or Starlight (1.17+), ResolutionControl+, ScreenshotToClipboard,
-        ShulkerBoxTooltip, Sodium, ToroHealth, Watson, WorldEditCUI, Xaero's World Map/Minimap
-        Fair-Play (1.18+)
       </p>
 
       <p><strong>What are the mods marked as <i>(lib)</i>?</strong><br /> These are mods required by
