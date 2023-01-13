@@ -36,7 +36,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends libwebkit2gtk-4.0-dev
-      if: ${{ success() && matrix.os == 'ubuntu-18.04' }}
+      if: ${{ success() && matrix.os == 'ubuntu-20.04' }}
 
     - name: Get dependencies
       run: |
@@ -64,7 +64,7 @@ jobs:
     
     - name: Upload a Build Artifact (Linux)
       uses: actions/upload-artifact@v3
-      if: ${{ success() && matrix.os == 'ubuntu-18.04' }}
+      if: ${{ success() && matrix.os == 'ubuntu-20.04' }}
       with:
         # Artifact name
         name: modpack-linux
