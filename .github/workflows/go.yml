@@ -8,16 +8,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, macos-latest, windows-latest]
+        os: [ubuntu-20.04, macos-latest, windows-latest]
     steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        cache: yarn
+        cache-dependency-path: ui/yarn.lock
+
     - name: Set up Go 1.19
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: ^1.19
+        cache: true
       id: go
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
 
     - name: Download DLLs for Windows
       run: >
@@ -31,26 +38,10 @@ jobs:
         sudo apt-get install --no-install-recommends libwebkit2gtk-4.0-dev
       if: ${{ success() && matrix.os == 'ubuntu-18.04' }}
 
-    - name: Cache .yarn
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-yarn
-      with:
-        path: ui/.yarn
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-
     - name: Get dependencies
       run: |
         go get -v -t -d ./...
         cd ui && yarn install --immutable && cd ..
-#        if [ -f Gopkg.toml ]; then
-#            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-#            dep ensure
-#        fi
 
     - name: Build
       run: cd ui && yarn build && cd .. && go build -ldflags="-s -w" -v .
@@ -72,24 +63,22 @@ jobs:
       run: go test -v .
     
     - name: Upload a Build Artifact (Linux)
-      uses: actions/upload-artifact@v2.1.4
+      uses: actions/upload-artifact@v3
       if: ${{ success() && matrix.os == 'ubuntu-18.04' }}
       with:
         # Artifact name
-        name: modpack-linux # optional, default is artifact
-        # A file, directory or wildcard pattern that describes what to upload
+        name: modpack-linux
         path: modpack
-        # The desired behavior if no files are found using the provided path.
 
     - name: Upload a Build Artifact (macOS)
-      uses: actions/upload-artifact@v2.1.4
+      uses: actions/upload-artifact@v3
       if: ${{ success() && matrix.os == 'macos-latest' }}
       with:
         name: modpack-macos
         path: modpack
 
     - name: Upload a Build Artifact (Windows)
-      uses: actions/upload-artifact@v2.1.4
+      uses: actions/upload-artifact@v3
       if: ${{ success() && matrix.os == 'windows-latest' }}
       with:
         name: modpack-windows
