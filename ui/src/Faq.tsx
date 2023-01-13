@@ -15,7 +15,7 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
     </AppBar>
     <Toolbar />
     <div css={{ padding: '8px' }}>
-      <p><strong>Is this Fabric or Forge? What's Quilt?</strong><br /> Since Minecraft 1.18, this modpack uses Quilt,
+      <p><strong>Is this Fabric, Quilt or Forge? What's Quilt?</strong><br /> On Minecraft 1.18+, this modpack uses Quilt,
         a Fabric replacement compatible with existing Fabric mods. On older versions, Fabric is still used.
       </p>
 
@@ -32,8 +32,6 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
         For FMap, MobCountMod, Watson and MiniHUD, you will need special keybinds (Y+C, P+C, L+C and H+C respectively).
       </p>
 
-      <p><strong>How do I zoom?</strong><br /> Use the V key.</p>
-
       <p>
         <strong>Full list of mods for 1.18/1.19:</strong>
         <ul>
@@ -47,16 +45,15 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
           <li>Dark Loading Screen</li>
           <li>Dynamic FPS</li>
           <li>EasierChests</li>
-          <li>Quilt Standard Libraries <i>(lib)</i></li>
           <li>Fabric Kotlin <i>(lib)</i></li>
           <li>FMapOverlayMod</li>
+          <li>Gamma Utils</li>
           <li>Hwyla/Wthit</li>
           <li>Indium <i>(lib)</i></li>
           <li>Iris</li>
           <li>LambdaBetterGrass</li>
           <li>lambDynamicLights</li>
           <li>LazyDFU</li>
-          <li>Ok Zoomer (1.16)/WI-Zoom (1.17+)</li>
           <li>LightOverlay</li>
           <li>Lithium</li>
           <li>M-Tape</li>
@@ -65,12 +62,13 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
           <li>MiniHUD</li>
           <li>MobCountMod</li>
           <li>ModMenu</li>
-          <li>MyBrightness (1.16-1.18) or Gamma Utils (1.19+)</li>
-          <li>Starlight</li>
+          <li>Ok Zoomer</li>
+          <li>Quilt Standard Libraries <i>(lib)</i></li>
           <li>ResolutionControl+</li>
           <li>ScreenshotToClipboard</li>
           <li>ShulkerBoxTooltip</li>
           <li>Sodium</li>
+          <li>Starlight</li>
           <li>ToroHealth</li>
           <li>Watson</li>
           <li>WorldEditCUI</li>
