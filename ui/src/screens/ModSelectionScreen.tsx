@@ -9,8 +9,8 @@ const ModSelectionScreen = ({ setCurrentStep, minecraftVersion, installFabric, t
   const toggleFabric = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
     if ((checked && !installFabric) || (!checked && installFabric)) toggleInstallFabric()
   }
-  // Yes, it's not pretty, but it'll be fixed eventually.
-  const fabricVersions = ['1.18', '1.17', '1.16', '1.15', '1.14']
+  // TODO: Yes, it's not pretty, but it'll be fixed eventually.
+  const fabricVersions = ['1.17', '1.16', '1.15', '1.14']
   fabricVersions.map(version => minecraftVersion.startsWith(version))
   const loaderName = fabricVersions.includes(minecraftVersion.substring(0, 4)) ? 'Fabric' : 'Quilt'
   return (

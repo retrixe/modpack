@@ -16,7 +16,7 @@ import (
 )
 
 const modpackVersion = "1.5.1"
-const defaultVersion = "1.19.2"
+const defaultVersion = "1.19"
 
 // LOW-TODO: Create a special profile that loads mods from a special folder?
 

@@ -18,7 +18,7 @@ func InteractiveCliInstall() {
 	defer installFabricOptMutex.Unlock()
 	defer minecraftFolderMutex.Unlock()
 
-	println("ibu's mod installer for Fabric 1.14.4+ - CLI")
+	println("ibu's mod installer - CLI")
 	println("FAQ: Open the GUI, or use https://mythicmc.org/modpack/faq.html")
 	println("")
 
@@ -68,7 +68,15 @@ func InteractiveCliInstall() {
 		},
 	))
 	println("")
-	installFabric := takeInput("Should the modpack install Fabric? [yes/no]", &Inputs{"y", "yes", "n", "no"})
+	// TODO: Yes, it's not pretty, but it'll be fixed eventually.
+	quilt := "Quilt"
+	if strings.HasPrefix(selectedVersion, "1.14") ||
+		strings.HasPrefix(selectedVersion, "1.15") ||
+		strings.HasPrefix(selectedVersion, "1.16") ||
+		strings.HasPrefix(selectedVersion, "1.17") {
+		quilt = "Fabric"
+	}
+	installFabric := takeInput("Should the modpack install "+quilt+"? [yes/no]", &Inputs{"y", "yes", "n", "no"})
 	if installFabric == "y" || installFabric == "yes" {
 		installFabricOpt = true
 	} else {
@@ -82,7 +90,7 @@ func InteractiveCliInstall() {
 	println("")
 
 	// Confirm.
-	println("Installing mods for " + selectedVersion + " (Install Fabric: " + strconv.FormatBool(installFabricOpt) + ")")
+	println("Installing mods for " + selectedVersion + " (Install " + quilt + ": " + strconv.FormatBool(installFabricOpt) + ")")
 	confirm := takeInput("Confirm? [yes/no]", &Inputs{"y", "yes", "n", "no"})
 	if confirm == "n" || confirm == "no" {
 		print("Installation cancelled! Exiting...")

@@ -34,28 +34,48 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
 
       <p><strong>How do I zoom?</strong><br /> Use the V key.</p>
 
-      <p><strong>Full list for 1.18/1.19:</strong><br /> Architectury <i>(lib)</i>, badpackets (1.19+),
-        Capes, Chat Utils, Cloth Config <i>(lib)</i>, Command Macros, Continuity, Dark Loading Screen,
-        Dynamic FPS, EasierChests, Quilt Standard Libraries <i>(lib)</i>, Fabric Kotlin <i>(lib)</i>,
-        FMapOverlayMod, Hwyla/Wthit, Indium <i>(lib)</i>, Iris, LambdaBetterGrass, lambDynamicLights,
-        LazyDFU, Ok Zoomer (1.16)/WI-Zoom (1.17+), LightOverlay, Lithium, M-Tape, MaLiLib <i>(lib)</i>,
-        Mc122477Fix, MiniHUD, MobCountMod, ModMenu, MyBrightness (1.16-1.18) or Gamma Utils (1.19+),
-        Starlight, ResolutionControl+, ScreenshotToClipboard, ShulkerBoxTooltip, Sodium, ToroHealth,
-        Watson, WorldEditCUI, Xaero's World Map/Minimap Fair-Play
-      </p>
-
-      <p><strong>OptiFine and 1.16+?</strong><br /> Due to OptiFine being slow and problematic, it has been replaced with Iris+Sodium
-        and replacement mods for capes, zoom, show fps, better grass, connected textures (1.17+) and dynamic lights. A full list
-        of replacement mods can be found at <a>https://lambdaurora.dev/optifine_alternatives/</a> for resource pack features. You
-        can also use Canvas instead of Iris+Indium+Sodium if you want. For displaying your fps, use the H key (H+C for settings).
-      </p>
-
-      <p><strong>Can I still use OptiFine on 1.16+?</strong><br /> Sort of. You can download OptiFine and OptiFabric,
-        however, it can cause conflicts with other mods, hence it's recommended to stick to Iris+Sodium or Canvas.
-        <strong>There is no reason anymore to use OptiFine with this pack anymore apart from some resource pack features.</strong>
-        Disable Capes, LambdaBetterGrass, Continuity, lambDynamicLights, Indium, Iris, Sodium,
-        Lithium, Hydrogen and Phosphor/Starlight before using OptiFine with my modpack. Report
-        any incompatibilities to me, but it is likely you will be told not to use OptiFine.
+      <p>
+        <strong>Full list of mods for 1.18/1.19:</strong>
+        <ul>
+          <li>Architectury <i>(lib)</i></li>
+          <li>badpackets (1.19+)</li>
+          <li>Capes</li>
+          <li>Chat Utils</li>
+          <li>Cloth Config <i>(lib)</i></li>
+          <li>Command Macros</li>
+          <li>Continuity</li>
+          <li>Dark Loading Screen</li>
+          <li>Dynamic FPS</li>
+          <li>EasierChests</li>
+          <li>Quilt Standard Libraries <i>(lib)</i></li>
+          <li>Fabric Kotlin <i>(lib)</i></li>
+          <li>FMapOverlayMod</li>
+          <li>Hwyla/Wthit</li>
+          <li>Indium <i>(lib)</i></li>
+          <li>Iris</li>
+          <li>LambdaBetterGrass</li>
+          <li>lambDynamicLights</li>
+          <li>LazyDFU</li>
+          <li>Ok Zoomer (1.16)/WI-Zoom (1.17+)</li>
+          <li>LightOverlay</li>
+          <li>Lithium</li>
+          <li>M-Tape</li>
+          <li>MaLiLib <i>(lib)</i></li>
+          <li>Mc122477Fix</li>
+          <li>MiniHUD</li>
+          <li>MobCountMod</li>
+          <li>ModMenu</li>
+          <li>MyBrightness (1.16-1.18) or Gamma Utils (1.19+)</li>
+          <li>Starlight</li>
+          <li>ResolutionControl+</li>
+          <li>ScreenshotToClipboard</li>
+          <li>ShulkerBoxTooltip</li>
+          <li>Sodium</li>
+          <li>ToroHealth</li>
+          <li>Watson</li>
+          <li>WorldEditCUI</li>
+          <li>Xaero's World Map/Minimap Fair-Play</li>
+        </ul>
       </p>
 
       <p><strong>What are the mods marked as <i>(lib)</i>?</strong><br /> These are mods required by
@@ -73,6 +93,20 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
         In-Game Account Switcher allows switching between accounts while in-game, and CraftPresence allows showing Minecraft
         in your Discord status, however, make sure you follow the rules of any Discord MC servers you are a member of when
         using this mod. These mods are not included for certain reasons, but they may be of use to you.
+      </p>
+
+      <p><strong>OptiFine and 1.16+?</strong><br /> Due to OptiFine being slow and problematic, it has been replaced with Iris+Sodium
+        and replacement mods for capes, zoom, show fps, better grass, connected textures (1.17+) and dynamic lights. A full list
+        of replacement mods can be found at <a>https://lambdaurora.dev/optifine_alternatives/</a> for resource pack features. You
+        can also use Canvas instead of Iris+Indium+Sodium if you want. For displaying your fps, use the H key (H+C for settings).
+      </p>
+
+      <p><strong>Can I still use OptiFine on 1.16+?</strong><br /> Sort of. You can download OptiFine and OptiFabric,
+        however, it can cause conflicts with other mods, hence it's recommended to stick to Iris+Sodium or Canvas.
+        <strong>There is no reason anymore to use OptiFine with this pack anymore apart from some resource pack features.</strong>
+        Disable Capes, LambdaBetterGrass, Continuity, lambDynamicLights, Indium, Iris, Sodium,
+        Lithium, Hydrogen and Phosphor/Starlight before using OptiFine with my modpack. Report
+        any incompatibilities to me, but it is likely you will be told not to use OptiFine.
       </p>
     </div>
   </div>
