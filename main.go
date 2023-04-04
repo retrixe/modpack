@@ -19,8 +19,6 @@ import (
 const modpackVersion = "1.6.0"
 const defaultVersion = "1.19"
 
-// LOW-TODO: Create a special profile that loads mods from a special folder?
-
 var selectedVersion = defaultVersion
 var selectedVersionMutex sync.Mutex
 var installFabricOpt = true
@@ -149,7 +147,7 @@ Would you like to rename it to oldmods?`)
 		upgradeSupported = true
 		existingModsSubfolder := ""
 		for _, file := range modsFolderContents {
-			if strings.HasPrefix(file.Name(), "="+version) &&
+			if strings.HasPrefix(file.Name(), "="+selectedVersion) &&
 				existingModsSubfolder < file.Name() {
 				existingModsSubfolder = file.Name()
 				break
@@ -158,10 +156,10 @@ Would you like to rename it to oldmods?`)
 		if existingModsSubfolder != "" {
 			// Check if this subfolder is managed.
 			installedModsInfo = getInstalledModsVersion(filepath.Join(modsFolder, existingModsSubfolder))
+			upgradeSupported = installedModsInfo != nil &&
+				selectedVersion == getMajorMinecraftVersion(installedModsInfo.Version)
 			// If it is, has a compatible minor version, but a different patch version, then copy mods.
-			if installedModsInfo != nil &&
-				selectedVersion == getMajorMinecraftVersion(installedModsInfo.Version) &&
-				existingModsSubfolder != "="+version {
+			if upgradeSupported && existingModsSubfolder != "="+version {
 				// Make new mods folder.
 				oldModsFolder := filepath.Join(modsFolder, existingModsSubfolder)
 				newModsFolder := filepath.Join(modsFolder, "="+version)
@@ -183,7 +181,7 @@ Would you like to rename it to oldmods?`)
 						}
 					}
 				}
-			} else if existingModsSubfolder == "="+version && installedModsInfo == nil {
+			} else if existingModsSubfolder == "="+version && !upgradeSupported {
 				// Rename the folder if it matches the one we need.
 				neededName := "mods/=" + version
 				newName := "mods/.old " + existingModsSubfolder
@@ -198,7 +196,6 @@ Would you like to rename it to ` + newName + `?`)
 				}
 				os.Rename(filepath.Join(modsFolder, existingModsSubfolder),
 					filepath.Join(modsFolder, ".old "+existingModsSubfolder))
-				upgradeSupported = false
 			}
 		} else {
 			os.MkdirAll(filepath.Join(modsFolder, "="+version), os.ModePerm)
@@ -321,7 +318,7 @@ func areModsUpdatable() string { // TODO: Support Quilt subfolders
 	}
 }
 
-func getInstalledModsVersion(location string) *InstalledModsInfo { // TODO: Support Quilt subfolders
+func getInstalledModsVersion(location string) *InstalledModsInfo {
 	file, err := os.Open(filepath.Join(location, "modsversion.txt"))
 	if err != nil {
 		return nil

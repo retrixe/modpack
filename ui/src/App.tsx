@@ -42,10 +42,7 @@ const App = (): JSX.Element => {
     }
   }, [])
 
-  const handleFaqOpen = (): void => { // LOW-TODO: There's probably better ways to do this lol
-    if (currentStep === 4) setCurrentStep(1)
-    setFaqOpen(true)
-  }
+  const handleFaqOpen = (): void => setFaqOpen(true)
   if (faqOpen) return <Faq close={() => setFaqOpen(false)} />
   return (
     <div css={{ height: '100%', padding: '8px', boxSizing: 'border-box' }}>

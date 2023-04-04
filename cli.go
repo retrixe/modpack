@@ -68,7 +68,6 @@ func InteractiveCliInstall() {
 		},
 	))
 	println("")
-	// TODO: Yes, it's not pretty, but it'll be fixed eventually.
 	quilt := "Quilt"
 	if strings.HasPrefix(selectedVersion, "1.14") ||
 		strings.HasPrefix(selectedVersion, "1.15") ||

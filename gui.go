@@ -111,6 +111,7 @@ func initiateInstall() {
 	setMessage("Working...") // This is already set in the JavaScript on mount, but whatever.
 	setInProgress(true)
 	defer setInProgress(false)
+	// TODO: If there was an upgrade, then it should show what mods were updated and what mods weren't
 	err := installMods(setMessage, queryUser)
 	if err != nil && err.Error() != "Cancelled" {
 		log.Println(err)
