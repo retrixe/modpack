@@ -1,6 +1,6 @@
 module github.com/retrixe/modpack
 
-go 1.17
+go 1.18
 
 require (
 	github.com/sqweek/dialog v0.0.0-20200911184034-8a3d98e8211d

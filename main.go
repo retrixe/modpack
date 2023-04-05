@@ -168,17 +168,17 @@ Would you like to rename it to oldmods?`)
 		// there is no supported mod folder, then rename any existing folder named =version.
 		if (upgradeSupported && existingModsSubfolder != "="+version) || !upgradeSupported {
 			if modFolderForCurrentVersionAlreadyExists {
-				_, err = os.Stat(filepath.Join(minecraftFolder, "mods", ".old "+existingModsSubfolder))
+				_, err = os.Stat(filepath.Join(minecraftFolder, "mods", ".old ="+version))
 				if err == nil || !os.IsNotExist(err) {
-					return errors.New("mods/=" + version + " folder and mods/.old = " + version + " folder exist, user must remove/rename either folder")
+					return errors.New("mods/=" + version + " folder and mods/.old =" + version + " folder exist, user must remove/rename either folder")
 				}
 				answer := queryUser(`A mods/=` + version + ` folder is already present which does not seem to be created by this pack.
 Would you like to rename it to mods/.old =` + version + `?`)
 				if !answer {
 					return errors.New("mods/=" + version + " folder already exists, and user refused to rename it")
 				}
-				err := os.Rename(filepath.Join(modsFolder, existingModsSubfolder),
-					filepath.Join(modsFolder, ".old "+existingModsSubfolder))
+				err := os.Rename(filepath.Join(modsFolder, "="+version),
+					filepath.Join(modsFolder, ".old ="+version))
 				if err != nil {
 					return err
 				}
@@ -386,7 +386,7 @@ type ModsData struct {
 	OldMods map[string]string `json:"oldmods"`
 }
 
-// InstalledModsInfo contains the contents of mods/modsversion.txt or mods/=<version>/modpack.txt
+// InstalledModsInfo contains the contents of mods/modsversion.txt or mods/=<version>/modsversion.txt
 type InstalledModsInfo struct {
 	Version       string
 	InstalledMods []string
