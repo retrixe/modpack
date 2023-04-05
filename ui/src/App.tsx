@@ -50,20 +50,19 @@ const App = (): JSX.Element => {
       <Grid container spacing={2} height='100%'>
         <Grid item xs={4} md={2}>
           <Paper css={{ height: '100%', padding: '8px', display: 'flex', flexDirection: 'column' }}>
-            {/* <div css={currentStep === 1 ? { backgroundColor: '#444444', borderRadius: '4px', padding: '4px' } : {}}> */}
-            <Typography variant={currentStep === 1 ? 'h6' : undefined}>
+            <Typography color={currentStep === 1 ? undefined : '#666666'} variant={currentStep === 1 ? 'h6' : undefined}>
               <b>Step 1:</b> Welcome
             </Typography>
             <Divider light sx={{ marginTop: '8px', marginBottom: '8px' }} />
-            <Typography variant={currentStep === 2 ? 'h6' : undefined}>
+            <Typography color={currentStep === 2 ? undefined : '#666666'} variant={currentStep === 2 ? 'h6' : undefined}>
               <b>Step 2:</b> Select Minecraft version
             </Typography>
             <Divider light sx={{ marginTop: '8px', marginBottom: '8px' }} />
-            <Typography variant={currentStep === 3 ? 'h6' : undefined}>
+            <Typography color={currentStep === 3 ? undefined : '#666666'} variant={currentStep === 3 ? 'h6' : undefined}>
               <b>Step 3:</b> Optional: Select mods to install
             </Typography>
             <Divider light sx={{ marginTop: '8px', marginBottom: '8px' }} />
-            <Typography variant={currentStep === 4 ? 'h6' : undefined}>
+            <Typography color={currentStep === 4 ? undefined : '#666666'} variant={currentStep === 4 ? 'h6' : undefined}>
               <b>Step 4:</b> Installation
             </Typography>
             <div css={{ flex: 1 }} />
