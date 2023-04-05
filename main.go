@@ -144,62 +144,54 @@ Would you like to rename it to oldmods?`)
 
 	// Check mods version-specific subfolder.
 	if useQuilt {
-		upgradeSupported = true
+		upgradeSupported = false
+		// First check if there is a compatible managed sub-folder.
 		existingModsSubfolder := ""
 		for _, file := range modsFolderContents {
 			if strings.HasPrefix(file.Name(), "="+selectedVersion) &&
-				existingModsSubfolder < file.Name() {
-				existingModsSubfolder = file.Name()
-				break
+				existingModsSubfolder < file.Name() { // We need the newest managed one.
+				modsInfo := getInstalledModsVersion(filepath.Join(modsFolder, file.Name()))
+				if modsInfo != nil && getMajorMinecraftVersion(modsInfo.Version) == selectedVersion {
+					upgradeSupported = true
+					installedModsInfo = modsInfo
+					existingModsSubfolder = file.Name()
+				}
 			}
 		}
-		if existingModsSubfolder != "" {
-			// Check if this subfolder is managed.
-			installedModsInfo = getInstalledModsVersion(filepath.Join(modsFolder, existingModsSubfolder))
-			upgradeSupported = installedModsInfo != nil &&
-				selectedVersion == getMajorMinecraftVersion(installedModsInfo.Version)
-			// If it is, has a compatible minor version, but a different patch version, then copy mods.
-			if upgradeSupported && existingModsSubfolder != "="+version {
-				// Make new mods folder.
-				oldModsFolder := filepath.Join(modsFolder, existingModsSubfolder)
-				newModsFolder := filepath.Join(modsFolder, "="+version)
-				os.MkdirAll(newModsFolder, os.ModePerm)
-				// Copy old mods from the old folder to the new one.
-				oldModsFolderContents, err := os.ReadDir(oldModsFolder)
+		// Check if a mod folder for the current version already exists.
+		modFolderForCurrentVersionAlreadyExists := false
+		_, err = os.Stat(filepath.Join(modsFolder, "="+version))
+		if err == nil || !os.IsNotExist(err) {
+			modFolderForCurrentVersionAlreadyExists = true
+		}
+		// If a supported mod folder exists, and it doesn't match the current version, OR
+		// there is no supported mod folder, then rename any existing folder named =version.
+		if (upgradeSupported && existingModsSubfolder != "="+version) || !upgradeSupported {
+			if modFolderForCurrentVersionAlreadyExists {
+				_, err = os.Stat(filepath.Join(minecraftFolder, "mods", ".old "+existingModsSubfolder))
+				if err == nil || !os.IsNotExist(err) {
+					return errors.New("mods/=" + version + " folder and mods/.old = " + version + " folder exist, user must remove/rename either folder")
+				}
+				answer := queryUser(`A mods/=` + version + ` folder is already present which does not seem to be created by this pack.
+Would you like to rename it to mods/.old =` + version + `?`)
+				if !answer {
+					return errors.New("mods/=" + version + " folder already exists, and user refused to rename it")
+				}
+				err := os.Rename(filepath.Join(modsFolder, existingModsSubfolder),
+					filepath.Join(modsFolder, ".old "+existingModsSubfolder))
 				if err != nil {
 					return err
 				}
-				for _, file := range oldModsFolderContents {
-					if !file.IsDir() {
-						input, err := os.ReadFile(filepath.Join(oldModsFolder, file.Name()))
-						if err != nil {
-							return err
-						}
-						err = os.WriteFile(filepath.Join(newModsFolder, file.Name()), input, os.ModePerm)
-						if err != nil {
-							return err
-						}
-					}
-				}
-			} else if existingModsSubfolder == "="+version && !upgradeSupported {
-				// Rename the folder if it matches the one we need.
-				neededName := "mods/=" + version
-				newName := "mods/.old " + existingModsSubfolder
-				_, err = os.Stat(filepath.Join(minecraftFolder, "mods", ".old "+existingModsSubfolder))
-				if err == nil || !os.IsNotExist(err) {
-					return errors.New(neededName + " folder and " + newName + " folder exist, user must remove/rename either folder")
-				}
-				answer := queryUser(`A ` + neededName + ` folder is already present which does not seem to be created by this pack.
-Would you like to rename it to ` + newName + `?`)
-				if !answer {
-					return errors.New(neededName + " folder already exists, and user refused to rename it")
-				}
-				os.Rename(filepath.Join(modsFolder, existingModsSubfolder),
-					filepath.Join(modsFolder, ".old "+existingModsSubfolder))
 			}
-		} else {
-			os.MkdirAll(filepath.Join(modsFolder, "="+version), os.ModePerm)
-			upgradeSupported = false
+			// If a supported mod folder exists, then rename it to =version.
+			if upgradeSupported {
+				os.Rename(filepath.Join(modsFolder, existingModsSubfolder),
+					filepath.Join(modsFolder, "="+version))
+			}
+		}
+		err := os.MkdirAll(filepath.Join(modsFolder, "="+version), os.ModePerm)
+		if err != nil {
+			return err
 		}
 	}
 
