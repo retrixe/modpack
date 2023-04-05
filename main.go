@@ -26,6 +26,8 @@ var installFabricOptMutex sync.Mutex
 var minecraftFolder = ""
 var minecraftFolderMutex sync.Mutex
 
+var fabricVersions = []string{"1.14", "1.15", "1.16", "1.17"}
+
 func main() {
 	if len(os.Args) >= 2 && (os.Args[1] == "--version" || os.Args[1] == "-v") {
 		println("modpack version " + modpackVersion)
@@ -283,12 +285,12 @@ Would you like to rename it to mods/.old =` + version + `?`)
 }
 
 // Lock minecraftFolder before calling.
-func areModsUpdatable() string { // TODO: Support Quilt subfolders
+func getUpdatableVersions() []string {
 	folder := minecraftFolder
 	if folder == "" || folder == ".minecraft" {
 		home, err := os.UserHomeDir()
 		if err != nil {
-			return ""
+			return []string{}
 		}
 		if runtime.GOOS == "darwin" {
 			folder = filepath.Join(home, "Library", "Application Support", "minecraft")
@@ -298,16 +300,38 @@ func areModsUpdatable() string { // TODO: Support Quilt subfolders
 			folder = filepath.Join(home, ".minecraft")
 		}
 	}
-	_, err := os.Stat(filepath.Join(folder, "mods"))
+	contents, err := os.ReadDir(filepath.Join(folder, "mods"))
 	var modsVersionTxt *InstalledModsInfo
 	if err == nil {
 		modsVersionTxt = getInstalledModsVersion(filepath.Join(folder, "mods"))
 	}
 	if modsVersionTxt != nil {
-		return modsVersionTxt.Version
+		return []string{getMajorMinecraftVersion(modsVersionTxt.Version)}
 	} else {
-		return ""
+		// Check all subfolders for available updates.
+		versions := []string{}
+		for _, file := range contents {
+			if strings.HasPrefix(file.Name(), "=") && file.IsDir() {
+				modsInfo := getInstalledModsVersion(filepath.Join(folder, "mods", file.Name()))
+				if modsInfo != nil &&
+					!includes(versions, getMajorMinecraftVersion(modsInfo.Version)) &&
+					// We don't support upgrading mods in sub-folders.
+					!includes(fabricVersions, getMajorMinecraftVersion(modsInfo.Version)) {
+					versions = append(versions, getMajorMinecraftVersion(modsInfo.Version))
+				}
+			}
+		}
+		return versions
 	}
+}
+
+func includes[T comparable](slice []T, value T) bool {
+	for _, v := range slice {
+		if v == value {
+			return true
+		}
+	}
+	return false
 }
 
 func getInstalledModsVersion(location string) *InstalledModsInfo {

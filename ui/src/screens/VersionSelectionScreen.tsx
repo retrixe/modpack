@@ -1,13 +1,14 @@
 import { Button, Typography, FormControl, FormControlLabel, RadioGroup, Radio } from '@mui/material'
 
-const VersionSelectionScreen = ({ setCurrentStep, minecraftVersion, setMinecraftVersion, updatableMcVersion }: {
-  updatableMcVersion: string
+const VersionSelectionScreen = ({ setCurrentStep, minecraftVersion, setMinecraftVersion, updatableVersions }: {
+  updatableVersions: string[]
   minecraftVersion: string
   setMinecraftVersion: (newState: string) => void
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>
 }): JSX.Element => {
   const l = (value: string, label: string): string => {
-    return value === updatableMcVersion ? `Upgrade existing mods installed for ${label}` : label
+    console.log(value, label, updatableVersions)
+    return updatableVersions.includes(value) ? `Upgrade existing mods installed for ${label}` : label
   }
   return (
     <>

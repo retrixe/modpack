@@ -8,8 +8,8 @@ interface Window {
   respondQuery: (answer: boolean) => void
 
   // JavaScript APIs.
+  setUpdatableVersionsState: (version: string[]) => void
   setMinecraftVersionState: (version: string) => void
-  setUpdatableVersionState: (version: string) => void
   setMinecraftFolderState: (version: string) => void
   setInProgressState: (inProgress: boolean) => void
   setMessageState: (progress: string) => void

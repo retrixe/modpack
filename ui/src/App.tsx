@@ -12,13 +12,14 @@ const App = (): JSX.Element => {
   const [currentStep, setCurrentStep] = useState(1)
   const [minecraftFolder, setMinecraftFolderState] = useState('')
   const [minecraftVersion, setMinecraftVersionState] = useState('')
-  const [updatableMcVersion, setUpdatableMcVersion] = useState('')
+  const [updatableVersions, setUpdatableVersions] = useState<string[]>([])
   const [installFabric, setInstallFabricState] = useState(true)
+  console.log(updatableVersions)
 
   // Any changes to Minecraft folder/version should propagate to Go.
   // Go can also edit the UI via folder prompt, as well as selected and updatable Minecraft versions.
   window.setInProgressState = setInProgress
-  window.setUpdatableVersionState = setUpdatableMcVersion
+  window.setUpdatableVersionsState = setUpdatableVersions
   window.setMinecraftVersionState = setMinecraftVersionState
   window.setMinecraftFolderState = setMinecraftFolderState
   const setMinecraftVersion = (newState: string): void => {
@@ -82,8 +83,8 @@ const App = (): JSX.Element => {
           {currentStep === 2 && (
             <VersionSelectionScreen
               setCurrentStep={setCurrentStep}
-              updatableMcVersion={updatableMcVersion}
               minecraftVersion={minecraftVersion}
+              updatableVersions={updatableVersions}
               setMinecraftVersion={setMinecraftVersion}
             />
           )}

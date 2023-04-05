@@ -23,7 +23,12 @@ func InteractiveCliInstall() {
 	println("")
 
 	// Detect if update is possible.
-	updatable := areModsUpdatable()
+	updatableVersions := getUpdatableVersions()
+	versions := "1.14.4/1.15.2/1.16.5/1.17.1/1.18.2/1.19.3"
+	if len(updatableVersions) > 0 {
+		versions += " (updatable: " + strings.Join(updatableVersions, ", ") + ")"
+	}
+	/* updatable := areModsUpdatable()
 	if updatable != "" {
 		update := takeInput(
 			"It looks like you already have "+updatable+" version installed. "+
@@ -57,11 +62,11 @@ func InteractiveCliInstall() {
 		} else {
 			println("Alright, sending you to the installation prompt instead of updating your mods.")
 		}
-	}
+	} */
 
 	// Take inputs.
 	selectedVersion = getMajorMinecraftVersion(takeInput(
-		"Version of Minecraft to use? [1.14.4/1.15.2/1.16.5/1.17.1/1.18.2/1.19.3]",
+		"Version of Minecraft to use? ["+versions+"]",
 		&Inputs{
 			"1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19.3",
 			"1.14", "1.15", "1.16", "1.17", "1.18", "1.19",

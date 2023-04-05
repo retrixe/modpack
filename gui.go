@@ -132,16 +132,12 @@ func queryUser(query string) bool {
 }
 
 func checkUpdatableAndUpdateVersion() {
-	updatable := areModsUpdatable()
-	if updatable != "" {
-		selectedVersion = updatable
-		w.Eval("setMinecraftVersionState('" + selectedVersion + "')")
-		w.Eval("setUpdatableVersionState('" + selectedVersion + "')")
-	} else {
-		selectedVersion = defaultVersion
-		w.Eval("setMinecraftVersionState('" + selectedVersion + "')")
-		w.Eval("setUpdatableVersionState('')")
+	updatable := getUpdatableVersions()
+	versionArrayJson := ""
+	for _, version := range updatable {
+		versionArrayJson += "\"" + version + "\","
 	}
+	w.Eval("setUpdatableVersionsState([" + versionArrayJson + "])")
 }
 
 func setMessage(content string) {
