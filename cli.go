@@ -24,7 +24,7 @@ func InteractiveCliInstall() {
 
 	// Detect if update is possible.
 	updatableVersions := getUpdatableVersions()
-	versions := "1.14.4/1.15.2/1.16.5/1.17.1/1.18.2/1.19.3"
+	versions := "1.14.4/1.15.2/1.16.5/1.17.1/1.18.2/1.19.4"
 	if len(updatableVersions) > 0 {
 		versions += " (updatable: " + strings.Join(updatableVersions, ", ") + ")"
 	}
@@ -68,7 +68,7 @@ func InteractiveCliInstall() {
 	selectedVersion = getMajorMinecraftVersion(takeInput(
 		"Version of Minecraft to use? ["+versions+"]",
 		&Inputs{
-			"1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19.3",
+			"1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19.4",
 			"1.14", "1.15", "1.16", "1.17", "1.18", "1.19",
 		},
 	))
