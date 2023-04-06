@@ -55,6 +55,15 @@ func getLatestFabric(quilt bool) (string, error) {
 	defer resp.Body.Close()
 	var versions FabricVersionResponse
 	xml.NewDecoder(resp.Body).Decode(&versions)
+	if quilt {
+		latest := ""
+		for _, v := range versions.Versioning.Versions {
+			if latest < v && !strings.Contains(v, "-") {
+				latest = v
+			}
+		}
+		return latest, nil
+	}
 	return versions.Versioning.Latest, nil
 }
 
@@ -84,15 +93,15 @@ type FabricVersionResponse struct {
 
 // FabricVersions contains the latest Fabric version as well as list of Fabric versions.
 type FabricVersions struct {
-	XMLName  xml.Name             `xml:"versioning"`
-	Latest   string               `xml:"latest"`
-	Release  string               `xml:"release"`
-	Versions []FabricVersionNames `xml:"versions"`
+	XMLName  xml.Name `xml:"versioning"`
+	Latest   string   `xml:"latest"`
+	Release  string   `xml:"release"`
+	Versions []string `xml:"versions>version"`
 }
 
 // FabricVersionNames is a list of Fabric versions.
 type FabricVersionNames struct {
-	XMLName xml.Name `xml:"versions"`
+	XMLName xml.Name `xml:"version"`
 	Version string   `xml:"version"`
 }
 
