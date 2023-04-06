@@ -208,7 +208,7 @@ Would you like to rename it to mods/.old =` + version + `?`)
 		}
 	}
 
-	updateProgress("Downloading my mods for " + version + "...")
+	updateProgress("Downloading mods for " + version + "...")
 	file, err := downloadFile(modVersion.URL)
 	if err != nil {
 		return err
