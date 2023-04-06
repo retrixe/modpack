@@ -260,6 +260,11 @@ Would you like to rename it to mods/.old =` + version + `?`)
 		if err != nil {
 			return err
 		}
+		quiltIgnoreFile, err := os.Create(filepath.Join(modFolder, "oldmods", "quilt_loader_ignored"))
+		if err != nil {
+			return err
+		}
+		quiltIgnoreFile.Close()
 		for modFilename, modName := range modsData.OldMods {
 			modFilePath := filepath.Join(modFolder, modFilename)
 			stat, err := os.Stat(modFilePath)

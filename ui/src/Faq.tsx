@@ -42,15 +42,19 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
           <li>Cloth Config <i>(lib)</i></li>
           <li>Command Macros</li>
           <li>Continuity</li>
+          <li>Cull Less Leaves</li>
           <li>Dark Loading Screen</li>
           <li>Dynamic FPS</li>
           <li>EasierChests</li>
           <li>Fabric Kotlin <i>(lib)</i></li>
+          <li>FerriteCore</li>
           <li>FMapOverlayMod</li>
           <li>Gamma Utils</li>
           <li>Hwyla/Wthit</li>
+          <li>ImmediatelyFast</li>
           <li>Indium <i>(lib)</i></li>
           <li>Iris</li>
+          <li>Krypton</li>
           <li>LambdaBetterGrass</li>
           <li>lambDynamicLights</li>
           <li>LazyDFU</li>
