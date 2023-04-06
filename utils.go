@@ -3,6 +3,7 @@ package main
 import (
 	"archive/zip"
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"io"
@@ -12,7 +13,12 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	_ "embed"
 )
+
+//go:embed icon.png
+var icon []byte
 
 func addProfileToLauncher(minecraftFolder string, versionName string, minecraftVersion string) error {
 	launcherProfiles, err := os.Open(filepath.Join(minecraftFolder, "launcher_profiles.json"))
@@ -51,7 +57,7 @@ func addProfileToLauncher(minecraftFolder string, versionName string, minecraftV
 			"type":          "custom",
 			"created":       time.Now().Format("2006-01-02T15:04:05.999Z"),
 			"lastUsed":      time.Now().Format("2006-01-02T15:04:05.999Z"),
-			"icon":          "Emerald_Block",
+			"icon":          "data:image/png;base64," + base64.StdEncoding.EncodeToString(icon),
 			"lastVersionId": versionName,
 		}
 	}
