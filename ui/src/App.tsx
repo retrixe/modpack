@@ -14,7 +14,6 @@ const App = (): JSX.Element => {
   const [minecraftVersion, setMinecraftVersionState] = useState('')
   const [updatableVersions, setUpdatableVersions] = useState<string[]>([])
   const [installFabric, setInstallFabricState] = useState(true)
-  console.log(updatableVersions)
 
   // Any changes to Minecraft folder/version should propagate to Go.
   // Go can also edit the UI via folder prompt, as well as selected and updatable Minecraft versions.

@@ -30,7 +30,7 @@ const VersionSelectionScreen = ({ setCurrentStep, minecraftVersion, setMinecraft
       <div css={{ display: 'flex', alignItems: 'stretch' }}>
         <Button variant='outlined' color='warning' onClick={() => setCurrentStep(1)}>Back</Button>
         <div css={{ padding: '4px' }} />
-        <Button variant='outlined' color='secondary' onClick={() => setCurrentStep(3)} css={{ flex: 1 }}>
+        <Button variant='outlined' color='secondary' disabled={minecraftVersion === ''} onClick={() => setCurrentStep(3)} css={{ flex: 1 }}>
           Continue
         </Button>
       </div>

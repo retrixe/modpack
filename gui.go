@@ -138,6 +138,7 @@ func checkUpdatableAndUpdateVersion() {
 		versionArrayJson += "\"" + version + "\","
 	}
 	w.Eval("setUpdatableVersionsState([" + versionArrayJson + "])")
+	w.Eval("setMinecraftVersionState(\"" + selectedVersion + "\")")
 }
 
 func setMessage(content string) {
