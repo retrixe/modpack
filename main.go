@@ -101,7 +101,11 @@ func installMods(updateProgress func(string), queryUser func(string) bool) error
 			if err != nil {
 				return err
 			}
-
+			// Create launcher profile.
+			err = addProfileToLauncher(minecraftFolder, versionName, selectedVersion)
+			if err != nil {
+				return err
+			}
 		} else {
 			file, err := downloadFabric(version, s)
 			if err != nil {

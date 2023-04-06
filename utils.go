@@ -4,13 +4,76 @@ import (
 	"archive/zip"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 )
+
+func addProfileToLauncher(minecraftFolder string, versionName string, minecraftVersion string) error {
+	launcherProfiles, err := os.Create(filepath.Join(minecraftFolder, "launcher_profiles.json"))
+	if err != nil {
+		return err
+	}
+	defer launcherProfiles.Close()
+	launcherProfilesContents, err := io.ReadAll(launcherProfiles)
+	if err != nil {
+		return err
+	}
+	var launcherProfilesJson map[string]interface{}
+	// If the file is empty, create a new one.
+	if len(launcherProfilesContents) == 0 {
+		launcherProfilesJson = map[string]interface{}{
+			"profiles": map[string]interface{}{},
+		}
+	} else {
+		err = json.Unmarshal(launcherProfilesContents, &launcherProfilesJson)
+		if err != nil {
+			return err
+		}
+	}
+	profiles, ok := launcherProfilesJson["profiles"].(map[string]interface{})
+	if !ok {
+		return errors.New("launcher_profiles.json is missing the profiles key")
+	}
+	suffix := minecraftVersion
+	if includes(fabricVersions, minecraftVersion) {
+		suffix = "(legacy Fabric)"
+	}
+	existingProfile, ok := profiles["ibu's modpack "+suffix].(map[string]interface{})
+	if ok {
+		existingProfile["lastVersionId"] = versionName
+		profiles["ibu's modpack "+suffix] = existingProfile
+	} else {
+		profiles["ibu's modpack "+suffix] = map[string]interface{}{
+			"name":          "ibu's modpack " + suffix,
+			"type":          "custom",
+			"created":       time.Now().Format("2006-01-02T15:04:05.999Z"),
+			"lastUsed":      time.Now().Format("2006-01-02T15:04:05.999Z"),
+			"icon":          "Emerald_Block",
+			"lastVersionId": versionName,
+		}
+	}
+	launcherProfilesJson["profiles"] = profiles
+	launcherProfilesContents, err = json.MarshalIndent(launcherProfilesJson, "", "  ")
+	if err != nil {
+		return err
+	}
+	launcherProfiles, err = os.Create(filepath.Join(minecraftFolder, "launcher_profiles.json"))
+	if err != nil {
+		return err
+	}
+	defer launcherProfiles.Close()
+	_, err = launcherProfiles.Write(launcherProfilesContents)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 // Lock minecraftFolder before calling.
 func getUpdatableVersions() []string {
