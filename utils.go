@@ -15,26 +15,23 @@ import (
 )
 
 func addProfileToLauncher(minecraftFolder string, versionName string, minecraftVersion string) error {
-	launcherProfiles, err := os.Create(filepath.Join(minecraftFolder, "launcher_profiles.json"))
-	if err != nil {
+	launcherProfiles, err := os.Open(filepath.Join(minecraftFolder, "launcher_profiles.json"))
+	var launcherProfilesContents []byte
+	if os.IsNotExist(err) {
+		launcherProfilesContents = []byte(`{"profiles":{}}`)
+	} else if err != nil {
 		return err
-	}
-	defer launcherProfiles.Close()
-	launcherProfilesContents, err := io.ReadAll(launcherProfiles)
-	if err != nil {
-		return err
-	}
-	var launcherProfilesJson map[string]interface{}
-	// If the file is empty, create a new one.
-	if len(launcherProfilesContents) == 0 {
-		launcherProfilesJson = map[string]interface{}{
-			"profiles": map[string]interface{}{},
-		}
 	} else {
-		err = json.Unmarshal(launcherProfilesContents, &launcherProfilesJson)
+		defer launcherProfiles.Close()
+		launcherProfilesContents, err = io.ReadAll(launcherProfiles)
 		if err != nil {
 			return err
 		}
+	}
+	var launcherProfilesJson map[string]interface{}
+	err = json.Unmarshal(launcherProfilesContents, &launcherProfilesJson)
+	if err != nil {
+		return err
 	}
 	profiles, ok := launcherProfilesJson["profiles"].(map[string]interface{})
 	if !ok {

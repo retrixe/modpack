@@ -7,7 +7,6 @@ const VersionSelectionScreen = ({ setCurrentStep, minecraftVersion, setMinecraft
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>
 }): JSX.Element => {
   const l = (value: string, label: string): string => {
-    console.log(value, label, updatableVersions)
     return updatableVersions.includes(value) ? `Upgrade existing mods installed for ${label}` : label
   }
   return (

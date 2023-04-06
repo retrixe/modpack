@@ -107,19 +107,26 @@ func initiateInstall() {
 	defer installFabricOptMutex.Unlock()
 	defer minecraftFolderMutex.Unlock()
 	defer w.Dispatch(checkUpdatableAndUpdateVersion)
-	setError("")             // This is already set in the JavaScript on mount, but whatever.
-	setMessage("Working...") // This is already set in the JavaScript on mount, but whatever.
-	setInProgress(true)
-	defer setInProgress(false)
+	w.Dispatch(func() {
+		setError("")             // This is already set in the JavaScript on mount, but whatever.
+		setMessage("Working...") // This is already set in the JavaScript on mount, but whatever.
+		setInProgress(true)
+	})
 	// TODO: If there was an upgrade, then it should show what mods were updated and what mods weren't
-	err := installMods(setMessage, queryUser)
-	if err != nil && err.Error() != "Cancelled" {
-		log.Println(err)
-		setError(err.Error())
-	} else {
-		setMessage("Done! You can now launch Minecraft, select the correct \"ibu's modpack\" profile," +
-			" and enjoy! See the FAQ if you need any more information.")
-	}
+	err := installMods(func(msg string) { w.Dispatch(func() { setMessage(msg) }) }, queryUser)
+	w.Dispatch(func() {
+		if err != nil && err.Error() != "Cancelled" {
+			log.Println(err)
+			setError(err.Error())
+		} else if installFabricOpt {
+			setMessage("Done! You can now launch Minecraft, select the latest \"ibu\\'s modpack\" profile," +
+				" and enjoy! See the FAQ if you need any more information.")
+		} else {
+			setMessage("Done! You can now launch Minecraft, select the latest fabric-loader or quilt-loader" +
+				" version, and enjoy! See the FAQ if you need any more information.")
+		}
+		setInProgress(false)
+	})
 }
 
 func queryUser(query string) bool {

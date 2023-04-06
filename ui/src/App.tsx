@@ -42,7 +42,11 @@ const App = (): JSX.Element => {
     }
   }, [])
 
-  const handleFaqOpen = (): void => setFaqOpen(true)
+  const handleFaqOpen = (): void => {
+    if (currentStep === 4) setCurrentStep(1) // Avoid reinstalling the mods again...
+    setFaqOpen(true)
+  }
+
   if (faqOpen) return <Faq close={() => setFaqOpen(false)} />
   return (
     <div css={{ height: '100%', padding: '8px', boxSizing: 'border-box' }}>
