@@ -19,7 +19,7 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
         a Fabric replacement compatible with existing Fabric mods. On older versions, Fabric is still used.
       </p>
 
-      <p><strong>What Minecraft versions are supported?</strong><br /> 1.18 and 1.19 are still updated. 1.14 through 1.17
+      <p><strong>What Minecraft versions are supported?</strong><br /> 1.18 to 1.20 are still updated. 1.14 through 1.17
         are unsupported, may have bugs (e.g. updating Fabric manually will break them) and should be avoided.
       </p>
 
@@ -33,13 +33,13 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
       </p>
 
       <p>
-        <strong>Full list of mods for 1.18/1.19:</strong>
+        <strong>Full list of mods for 1.18/1.19/1.20:</strong>
         <ul>
           <li>Architectury <i>(lib)</i></li>
           <li>badpackets (1.19+)</li>
           <li>Capes</li>
           <li>Chat Utils</li>
-          <li>Cloth Config <i>(lib)</i></li>
+          <li>Cloth Config (1.18/1.19 only) <i>(lib)</i></li>
           <li>Command Macros</li>
           <li>Continuity</li>
           <li>Cull Less Leaves</li>
@@ -77,6 +77,7 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
           <li>Watson</li>
           <li>WorldEditCUI</li>
           <li>Xaero's World Map/Minimap Fair-Play</li>
+          <li>YetAnotherConfigLib <i>(lib)</i></li>
         </ul>
       </p>
 

@@ -17,6 +17,7 @@ const VersionSelectionScreen = ({ setCurrentStep, minecraftVersion, setMinecraft
       </Typography>
       <FormControl>
         <RadioGroup value={minecraftVersion} onChange={event => setMinecraftVersion(event.target.value)}>
+          <FormControlLabel value='1.20' control={<Radio />} label={l('1.20', 'Minecraft 1.20.1')} />
           <FormControlLabel value='1.19' control={<Radio />} label={l('1.19', 'Minecraft 1.19.4')} />
           <FormControlLabel value='1.18' control={<Radio />} label={l('1.18', 'Minecraft 1.18.2')} />
           <FormControlLabel value='1.17' control={<Radio />} label={l('1.17', 'Minecraft 1.17.1 (UNSUPPORTED)')} />

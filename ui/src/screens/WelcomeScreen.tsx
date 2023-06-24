@@ -17,7 +17,7 @@ const WelcomeScreen = ({ setCurrentStep, minecraftFolder, setMinecraftFolder }: 
         MiniHUD, Command Macros, and many other features and gameplay improvements.
       </Typography>
       <Typography gutterBottom>
-        1.18 and 1.19 are fully supported. 1.14 through 1.17 are available, but no longer updated.
+        1.18, 1.19 and 1.20 are fully supported. 1.14 through 1.17 are available, but no longer updated.
       </Typography>
       <Typography gutterBottom>
         See the FAQ for more info about Quilt, older Minecraft versions, OptiFine support and
