@@ -39,7 +39,7 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
           <li>badpackets (1.19+)</li>
           <li>Capes</li>
           <li>Chat Utils</li>
-          <li>Cloth Config (1.18/1.19 only) <i>(lib)</i></li>
+          <li>Cloth Config <i>(lib)</i></li>
           <li>Command Macros</li>
           <li>Continuity</li>
           <li>Cull Less Leaves</li>
@@ -66,6 +66,7 @@ const Faq = ({ close }: { close: () => void }): JSX.Element => (
           <li>MiniHUD</li>
           <li>MobCountMod</li>
           <li>ModMenu</li>
+          <li>Nvidium (1.20+)</li>
           <li>Ok Zoomer</li>
           <li>Quilt Standard Libraries <i>(lib)</i></li>
           <li>ResolutionControl+</li>
